@@ -15,17 +15,17 @@ class PCS(object):
         self.access_token = access_token
         self.api_template = api_template
 
-    def info(self):
+    def info(self, **kwargs):
         """获取当前用户空间配额信息."""
         api = self.api_template.format('quota')
         params = {
             'method': 'info',
             'access_token': self.access_token
         }
-        response = requests.get(api, params=params)
+        response = requests.get(api, params=params, **kwargs)
         return response.json()
 
-    def upload(self, remote_path, file_content, ondup=''):
+    def upload(self, remote_path, file_content, ondup='', **kwargs):
         """上传单个文件（<2G）.
         remote_path 必须以 /apps/ 开头
         """
@@ -37,10 +37,10 @@ class PCS(object):
         }
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         files = {'file': file_content}
-        response = requests.post(api, files=files)
+        response = requests.post(api, files=files, **kwargs)
         return response.json()
 
-    def upload_tmpfile(self, file_content):
+    def upload_tmpfile(self, file_content, **kwargs):
         """."""
         params = {
             'method': 'upload',
@@ -49,10 +49,10 @@ class PCS(object):
         }
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         files = {'file': file_content}
-        response = requests.post(api, files=files)
+        response = requests.post(api, files=files, **kwargs)
         return response.json()
 
-    def upload_superfile(self, remote_path, block_list, ondup=''):
+    def upload_superfile(self, remote_path, block_list, ondup='', **kwargs):
         """."""
         # pdb.set_trace()
         params = {
@@ -65,25 +65,19 @@ class PCS(object):
                 'param': json.dumps({'block_list': block_list}),
         }
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data)
+        response = requests.post(api, data=data, **kwargs)
         return response.json()
 
-    def download(self, remote_path):
+    def download(self, remote_path, **kwargs):
         params = {
             'method': 'download',
             'access_token': self.access_token,
             'path': remote_path,
         }
         api = self.api_template.format('file')
-        response = requests.get(api, params=params)
+        response = requests.get(api, params=params, **kwargs)
         return response.content
 
 if __name__ == '__main__':
-    # access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000.1380728222.'
-    # access_token += '570579779-1274287'
-    # pcs = PCS(access_token)
-    # f1_md5 = pcs.upload_tmpfile('abc')['md5']
-    # f2_md5 = pcs.upload_tmpfile('def')['md5']
-    # result = pcs.upload_superfile('/apps/test_sdk/super.txt', [f1_md5, f2_md5])
     # pdb.set_trace()
     pass
