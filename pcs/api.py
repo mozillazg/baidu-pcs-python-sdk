@@ -68,6 +68,16 @@ class PCS(object):
         response = requests.post(api, data=data)
         return response.json()
 
+    def download(self, remote_path):
+        params = {
+            'method': 'download',
+            'access_token': self.access_token,
+            'path': remote_path,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params)
+        return response.content
+
 if __name__ == '__main__':
     # access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000.1380728222.'
     # access_token += '570579779-1274287'

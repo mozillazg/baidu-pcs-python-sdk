@@ -23,3 +23,9 @@ def test_superfile():
     f2_md5 = pcs.upload_tmpfile('def')['md5']
     result = pcs.upload_superfile('/apps/test_sdk/super2.txt', [f1_md5, f2_md5])
     assert result
+
+
+def test_download():
+    result = pcs.download('/apps/test_sdk/super2.txt')
+    assert 'abc' in result
+    assert 'def' in result
