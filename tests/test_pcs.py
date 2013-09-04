@@ -29,3 +29,8 @@ def test_download():
     result = pcs.download('/apps/test_sdk/super2.txt')
     assert 'abc' in result
     assert 'def' in result
+
+
+def test_mkdir():
+    result = pcs.mkdir('/apps/test_sdk/testmkdir')
+    assert result

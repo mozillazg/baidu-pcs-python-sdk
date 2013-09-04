@@ -144,6 +144,30 @@ class PCS(object):
         response = requests.get(api, params=params, **kwargs)
         return response.content
 
+    def mkdir(self, remote_path, **kwargs):
+        """创建目录。
+
+        >>> access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
+        >>> access_token += '.1380728222.570579779-1274287'
+        >>> pcs = PCS(access_token)
+        >>> pcs.mkdir('/apps/test_sdk/testmkdir')
+        {u'path': u'/apps/test_sdk/testmkdir',
+        u'request_id': 3256158393L, u'ctime': 1378300434, u'fs_id': 772118772,
+        u'mtime': 1378300434}
+
+        """
+        pdb.set_trace()
+        params = {
+            'method': 'mkdir',
+            'access_token': self.access_token,
+            'path': remote_path
+        }
+        api = self.api_template.format('file')
+        response = requests.post(api, params=params, **kwargs)
+        return response.content
+
 if __name__ == '__main__':
-    # pdb.set_trace()
-    pass
+    access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
+    access_token += '.1380728222.570579779-1274287'
+    pcs = PCS(access_token)
+    # print pcs.mkdir('/apps/test_sdk/testmkdir')
