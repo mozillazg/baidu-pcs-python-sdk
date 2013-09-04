@@ -34,3 +34,14 @@ def test_download():
 def test_mkdir():
     result = pcs.mkdir('/apps/test_sdk/testmkdir')
     assert result
+
+
+def test_meta():
+    result = pcs.meta('/apps/test_sdk/superfile.txt')
+    assert result
+
+
+def test_multi_meta():
+    result = pcs.multi_meta(['/apps/test_sdk/superfile.txt',
+                            '/apps/test_sdk/testmkdir'])
+    assert result

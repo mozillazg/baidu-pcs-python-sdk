@@ -166,7 +166,7 @@ class PCS(object):
         return response.json()
 
     def meta(self, remote_path, **kwargs):
-        """获取文件或目录信息.
+        """获取单个文件或目录的元信息。
 
         >>> access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
         >>> access_token += '.1380728222.570579779-1274287'
@@ -191,7 +191,45 @@ class PCS(object):
             'path': remote_path
         }
         api = self.api_template.format('file')
-        response = requests.post(api, params=params, **kwargs)
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
+
+    def multi_meta(self, path_list, **kwargs):
+        """批量获取文件或目录的元信息。
+
+        >>> access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
+        >>> access_token += '.1380728222.570579779-1274287'
+        >>> pcs = PCS(access_token)
+        >>> pcs.multi_meta(['/apps/test_sdk/superfile.txt',
+            '/apps/test_sdk/testmkdir'])
+        {u'list': [{u'isdir': 0, u'ctime': 1378290352, u'ifhassubdir': 0,
+        u'fs_id': 333508963, u'mtime': 1378290352, u'block_list':
+        u'["900150983cd24fb0d6963f7d28e17f72",
+        "7d09898e18511cf7c0c1815d07728d23"]',
+        u'path': u'/apps/test_sdk/superfile.txt', u'filenum': 0, u'size': 6},
+        {u'isdir': 1, u'ctime': 1378300434, u'ifhassubdir': 0,
+        u'fs_id': 772118772, u'mtime': 1378300434, u'block_list': u'',
+        u'path': u'/apps/test_sdk/testmkdir', u'filenum': 0, u'size': 0}],
+        u'request_id': 3256137575L}
+
+        """
+        params = {
+            'method': 'meta',
+            'access_token': self.access_token,
+            # 'params': json.dumps({
+            #              'list': [{'path': path} for path in path_list]
+            #           }),
+        }
+        data = {
+            'param': json.dumps({
+                'list': [{'path': path} for path in path_list]
+            }),
+        }
+        pdb.set_trace()
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        # api = self.api_template.format('file')
+        response = requests.post(api, data=data, **kwargs)
+        print response.content
         return response.json()
 
 if __name__ == '__main__':
@@ -199,5 +237,7 @@ if __name__ == '__main__':
     access_token += '.1380728222.570579779-1274287'
     pcs = PCS(access_token)
     # print pcs.mkdir('/apps/test_sdk/testmkdir')
-    print pcs.meta('/apps/test_sdk/superfile.txt')
-    print pcs.meta('/apps/test_sdk/testmkdir')
+    # print pcs.meta('/apps/test_sdk/superfile.txt')
+    # print pcs.meta('/apps/test_sdk/testmkdir')
+    print pcs.multi_meta(['/apps/test_sdk/superfile.txt',
+                         '/apps/test_sdk/testmkdir'])
