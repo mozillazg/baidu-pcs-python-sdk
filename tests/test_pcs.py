@@ -129,3 +129,9 @@ def test_multi_delete():
                               '/apps/test_sdk/testmkdir/d.txt'])
     logger.warn(result)
     assert True
+
+
+def test_search():
+    result = pcs.search('/apps/test_sdk/testmkdir', 'txt')
+    logger.warn(result)
+    assert True

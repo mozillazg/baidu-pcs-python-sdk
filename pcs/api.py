@@ -209,3 +209,16 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
         return response.json()
+
+    def search(self, remote_path, keyword, recurrent='0', **kwargs):
+        """获取目录下的文件列表."""
+        params = {
+            'method': 'list',
+            'access_token': self.access_token,
+            'path': remote_path,
+            'wd': keyword,
+            're': recurrent,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
