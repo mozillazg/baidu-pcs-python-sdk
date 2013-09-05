@@ -99,7 +99,6 @@ def test_copy():
 
 
 def test_multi_copy():
-    pdb.set_trace()
     path_list = [
         {
             'from': '/apps/test_sdk/test.txt',
@@ -111,5 +110,10 @@ def test_multi_copy():
         }
     ]
     result = pcs.multi_copy(path_list)
+    logger.warn(result)
+    assert True
+
+def test_delete():
+    result = pcs.delete('/apps/test_sdk/testmkdir/e.txt')
     logger.warn(result)
     assert True

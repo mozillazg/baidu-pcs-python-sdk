@@ -183,3 +183,14 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
         return response.json()
+
+    def delete(self, remote_path, **kwargs):
+        """删除单个文件/目录。"""
+        params = {
+            'method': 'delete',
+            'access_token': self.access_token,
+            'path': remote_path
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
