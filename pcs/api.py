@@ -129,3 +129,18 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def move(self, from_path, to_path, **kwargs):
+        """移动单个文件/目录。"""
+        params = {
+            'method': 'move',
+            'access_token': self.access_token,
+        }
+        data = {
+            'from': from_path,
+            'to': to_path,
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
+

@@ -65,3 +65,10 @@ def test_file_list():
     result = pcs.file_list('/apps/test_sdk/testmkdir')
     logger.warn(result)
     assert True
+
+
+def test_move():
+    result = pcs.move('/apps/test_sdk/test.txt',
+                      '/apps/test_sdk/testmkdir/a.txt')
+    logger.warn(result)
+    assert True
