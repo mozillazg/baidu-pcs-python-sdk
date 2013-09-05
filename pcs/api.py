@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from urllib import urlencode
-import os
-import pdb
 import json
 
 import requests
 
 api_template = 'https://pcs.baidu.com/rest/2.0/pcs/{0}'
+
 
 class PCS(object):
     def __init__(self, access_token, api_template=api_template):
@@ -63,7 +62,7 @@ class PCS(object):
             'ondup': ondup
         }
         data = {
-                'param': json.dumps({'block_list': block_list}),
+            'param': json.dumps({'block_list': block_list}),
         }
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
@@ -130,15 +129,3 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
-
-
-if __name__ == '__main__':
-    access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
-    access_token += '.1380728222.570579779-1274287'
-    pcs = PCS(access_token)
-    # print pcs.mkdir('/apps/test_sdk/testmkdir')
-    # print pcs.meta('/apps/test_sdk/superfile.txt')
-    # print pcs.meta('/apps/test_sdk/testmkdir')
-    # print pcs.multi_meta(['/apps/test_sdk/superfile.txt',
-    #                      '/apps/test_sdk/testmkdir'])
-    # print pcs.file_list('/apps/test_sdk')
