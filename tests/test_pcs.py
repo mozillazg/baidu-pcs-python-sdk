@@ -72,3 +72,19 @@ def test_move():
                       '/apps/test_sdk/testmkdir/a.txt')
     logger.warn(result)
     assert True
+
+
+def test_multi_move():
+    path_list = [
+        {
+            'from': '/apps/test_sdk/test.txt',
+            'to': '/apps/test_sdk/testmkdir/b.txt',
+        },
+        {
+            'from': '/apps/test_sdk/testmkdir/b.txt',
+            'to': '/apps/test_sdk/testmkdir/a.txt',
+        }
+    ]
+    result = pcs.multi_move(path_list)
+    logger.warn(result)
+    assert True

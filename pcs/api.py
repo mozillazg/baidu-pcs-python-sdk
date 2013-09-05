@@ -144,3 +144,15 @@ class PCS(object):
         response = requests.post(api, data=data, **kwargs)
         return response.json()
 
+    def multi_move(self, path_list, **kwargs):
+        """批量移动文件/目录。"""
+        params = {
+            'method': 'move',
+            'access_token': self.access_token,
+        }
+        data = {
+            'param': json.dumps({'list': path_list}),
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
