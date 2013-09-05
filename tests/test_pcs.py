@@ -124,7 +124,7 @@ def test_delete():
 
 
 def test_multi_delete():
-    pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
+    pcs.upload('/apps/test_sdk/testmkdir/e.txt')
     result = pcs.multi_delete(['/apps/test_sdk/testmkdir/e.txt',
                               '/apps/test_sdk/testmkdir/d.txt'])
     logger.warn(result)
@@ -132,6 +132,12 @@ def test_multi_delete():
 
 
 def test_search():
-    result = pcs.search('/apps/test_sdk/testmkdir', 'txt')
+    result = pcs.search('/apps/test_sdk/testmkdir', 'a')
+    logger.warn(result)
+    assert True
+
+
+def test_thumbnail():
+    result = pcs.thumbnail('/apps/test_sdk/testmkdir/404.png', 20, 20)
     logger.warn(result)
     assert True

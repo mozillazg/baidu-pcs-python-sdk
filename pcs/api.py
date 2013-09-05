@@ -213,7 +213,7 @@ class PCS(object):
     def search(self, remote_path, keyword, recurrent='0', **kwargs):
         """获取目录下的文件列表."""
         params = {
-            'method': 'list',
+            'method': 'search',
             'access_token': self.access_token,
             'path': remote_path,
             'wd': keyword,
@@ -222,3 +222,17 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def thumbnail(self, remote_path, height, width, quality=100, **kwargs):
+        """获取指定图片文件的缩略图。"""
+        params = {
+            'method': 'generate',
+            'access_token': self.access_token,
+            'path': remote_path,
+            'height': height,
+            'width': width,
+            'quality': quality,
+        }
+        api = self.api_template.format('thumbnail')
+        response = requests.get(api, params=params, **kwargs)
+        return response.content
