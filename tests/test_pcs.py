@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import pdb
 
 from pcs import PCS
 
@@ -86,5 +87,12 @@ def test_multi_move():
         }
     ]
     result = pcs.multi_move(path_list)
+    logger.warn(result)
+    assert True
+
+
+def test_copy():
+    result = pcs.copy('/apps/test_sdk/test.txt',
+                      '/apps/test_sdk/testmkdir/c.txt')
     logger.warn(result)
     assert True

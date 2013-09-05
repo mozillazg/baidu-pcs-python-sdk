@@ -156,3 +156,17 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
         return response.json()
+
+    def copy(self, from_path, to_path, **kwargs):
+        """拷贝文件(目录)。"""
+        params = {
+            'method': 'copy',
+            'access_token': self.access_token,
+        }
+        data = {
+            'from': from_path,
+            'to': to_path,
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
