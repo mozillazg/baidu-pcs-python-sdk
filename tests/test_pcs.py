@@ -96,3 +96,20 @@ def test_copy():
                       '/apps/test_sdk/testmkdir/c.txt')
     logger.warn(result)
     assert True
+
+
+def test_multi_copy():
+    pdb.set_trace()
+    path_list = [
+        {
+            'from': '/apps/test_sdk/test.txt',
+            'to': '/apps/test_sdk/testmkdir/d.txt',
+        },
+        {
+            'from': '/apps/test_sdk/testmkdir/c.txt',
+            'to': '/apps/test_sdk/testmkdir/e.txt',
+        }
+    ]
+    result = pcs.multi_copy(path_list)
+    logger.warn(result)
+    assert True
