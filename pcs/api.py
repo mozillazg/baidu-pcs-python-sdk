@@ -194,3 +194,18 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def multi_delete(self, path_list, **kwargs):
+        """批量删除文件/目录。"""
+        params = {
+            'method': 'delete',
+            'access_token': self.access_token,
+        }
+        data = {
+            'param': json.dumps({
+                'list': [{'path': path} for path in path_list]
+            }),
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
