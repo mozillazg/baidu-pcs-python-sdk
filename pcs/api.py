@@ -216,21 +216,37 @@ class PCS(object):
         params = {
             'method': 'meta',
             'access_token': self.access_token,
-            # 'params': json.dumps({
-            #              'list': [{'path': path} for path in path_list]
-            #           }),
         }
         data = {
             'param': json.dumps({
                 'list': [{'path': path} for path in path_list]
             }),
         }
-        pdb.set_trace()
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        # api = self.api_template.format('file')
         response = requests.post(api, data=data, **kwargs)
-        print response.content
         return response.json()
+
+    def file_list(self, remote_path, by='', order='', limit='', **kwargs):
+        """获取目录下的文件列表.
+
+        >>> access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
+        >>> access_token += '.1380728222.570579779-1274287'
+        >>> pcs = PCS(access_token)
+        >>> pcs.file_list('/apps/test_sdk')
+
+        """
+        params = {
+            'method': 'list',
+            'access_token': self.access_token,
+            'path': remote_path,
+            'by': by,
+            'order': order,
+            'limit': limit,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
+
 
 if __name__ == '__main__':
     access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000'
@@ -239,5 +255,6 @@ if __name__ == '__main__':
     # print pcs.mkdir('/apps/test_sdk/testmkdir')
     # print pcs.meta('/apps/test_sdk/superfile.txt')
     # print pcs.meta('/apps/test_sdk/testmkdir')
-    print pcs.multi_meta(['/apps/test_sdk/superfile.txt',
-                         '/apps/test_sdk/testmkdir'])
+    # print pcs.multi_meta(['/apps/test_sdk/superfile.txt',
+    #                      '/apps/test_sdk/testmkdir'])
+    # print pcs.file_list('/apps/test_sdk')
