@@ -4,7 +4,7 @@
 import logging
 import pdb
 
-from pcs import PCS
+from baidupcs import PCS
 
 logging.basicConfig(level=logging.WARN,
                     format='\n%(funcName)s - %(lineno)d\n%(message)s')
