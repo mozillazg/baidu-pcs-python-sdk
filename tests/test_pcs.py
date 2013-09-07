@@ -228,7 +228,7 @@ def test_cancel_offline_download_task():
     logger.warn(result)
     assert True
 
-def test_list_recycle():
-    result = pcs.list_recycle()
+def test_recycle_bin_list():
+    result = pcs.recycle_bin_list()
     logger.warn(result)
     assert True

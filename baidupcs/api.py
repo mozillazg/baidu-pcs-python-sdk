@@ -393,7 +393,7 @@ class PCS(object):
         response = requests.post(api, data=data, **kwargs)
         return response.json()
 
-    def list_recycle(self, start=0, limit=1000, **kwargs):
+    def recycle_bin_list(self, start=0, limit=1000, **kwargs):
         """获取回收站中的文件及目录列表。"""
         params = {
             'method': 'listrecycle',
