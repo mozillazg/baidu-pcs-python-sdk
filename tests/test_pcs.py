@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import pdb
 import time
 import os
 
@@ -152,7 +151,7 @@ def test_diff():
     logger.warn(result)
     logger.warn('\n')
     new_cursor = result['cursor']
-    time.sleep(60)
+    time.sleep(5)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
     result = pcs.diff(cursor=new_cursor)
@@ -207,7 +206,6 @@ def test_query_offline_download_task():
     url1 = 'http://yy.client.fwdl.kingsoft.com/Moon-V051770.rar'
     url2 = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
     remote_path = '/apps/test_sdk/testmkdir/%s'
-    pdb.set_trace()
     task1 = pcs.add_offline_download_task(url1,
                                           remote_path % os.path.basename(url1))
     task2 = pcs.add_offline_download_task(url2,
@@ -217,21 +215,30 @@ def test_query_offline_download_task():
     logger.warn(result)
     assert True
 
+
 def test_list_offline_download_task():
     result = pcs.list_offline_download_task()
     logger.warn(result)
     assert True
 
+
 def test_cancel_offline_download_task():
-    task_id = pcs.list_offline_download_task()['task_info'][0]['task_id']
-    result = pcs.cancel_offline_download_task(task_id)
-    logger.warn(result)
-    assert True
+    task_info = pcs.list_offline_download_task()['task_info']
+    if not task_info:
+        logger.warn('\n')
+        assert True
+    else:
+        task_id = task_info[0]['task_id']
+        result = pcs.cancel_offline_download_task(task_id)
+        logger.warn(result)
+        assert True
+
 
 def test_recycle_bin_list():
     result = pcs.recycle_bin_list()
     logger.warn(result)
     assert True
+
 
 def test_recycle_bin_restore():
     fs_id = pcs.recycle_bin_list()['list'][0]['fs_id']
@@ -239,7 +246,8 @@ def test_recycle_bin_restore():
     logger.warn(result)
     assert True
 
-def recycle_bin_multi_restore():
+
+def test_recycle_bin_multi_restore():
     pcs.upload('/apps/test_sdk/testmkdir/1.txt', 'test', ondup='overwrite')
     pcs.delete('/apps/test_sdk/testmkdir/1.txt')
     pcs.upload('/apps/test_sdk/testmkdir/2.txt', 'test', ondup='overwrite')
@@ -247,5 +255,11 @@ def recycle_bin_multi_restore():
     time.sleep(1)
     fs_ids = [x['fs_id'] for x in pcs.recycle_bin_list()['list'][:1]]
     result = pcs.recycle_bin_multi_restore(fs_ids)
+    logger.warn(result)
+    assert True
+
+
+def test_recycle_bin_clean():
+    result = pcs.recycle_bin_clean()
     logger.warn(result)
     assert True

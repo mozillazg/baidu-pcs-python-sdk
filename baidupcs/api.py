@@ -3,7 +3,6 @@
 
 from urllib import urlencode
 import json
-import pdb
 
 import requests
 
@@ -372,7 +371,6 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
                          urlencode(params))
         response = requests.post(api, data=data, **kwargs)
-        pdb.set_trace()
         return response.json()
 
     def cancel_offline_download_task(self, task_id, expires=None, **kwargs):
@@ -431,4 +429,15 @@ class PCS(object):
         }
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
+        return response.json()
+
+    def recycle_bin_clean(self, **kwargs):
+        """清空回收站。"""
+        params = {
+            'method': 'delete',
+            'access_token': self.access_token,
+            'type': 'recycle',
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
         return response.json()
