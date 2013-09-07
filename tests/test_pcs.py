@@ -232,3 +232,9 @@ def test_recycle_bin_list():
     result = pcs.recycle_bin_list()
     logger.warn(result)
     assert True
+
+def test_recycle_bin_restore():
+    fs_id = pcs.recycle_bin_list()['list'][0]['fs_id']
+    result = pcs.recycle_bin_restore(fs_id)
+    logger.warn(result)
+    assert True

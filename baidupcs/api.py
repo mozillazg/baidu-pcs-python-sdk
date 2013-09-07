@@ -404,3 +404,16 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def recycle_bin_restore(self, fs_id, **kwargs):
+        """还原单个文件或目录（非强一致接口，调用后请sleep 1秒读取）。"""
+        params = {
+            'method': 'restore',
+            'access_token': self.access_token,
+        }
+        data = {
+            'fs_id': fs_id,
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
