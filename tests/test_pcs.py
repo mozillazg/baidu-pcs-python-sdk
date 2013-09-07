@@ -6,6 +6,7 @@ import pdb
 import time
 
 from baidupcs import PCS
+from utils import content_md5, content_crc32, slice_md5
 
 logging.basicConfig(level=logging.WARN,
                     format='\n%(funcName)s - %(lineno)d\n%(message)s')
@@ -157,11 +158,13 @@ def test_diff():
     logger.warn(result)
     assert True
 
+
 def test_video_convert():
     result = pcs.video_convert('/apps/test_sdk/testmkdir/test.mp4',
                                'M3U8_320_240')
     logger.warn(result)
     assert True
+
 
 def test_stream_list():
     result = pcs.stream_list('image')
@@ -170,7 +173,22 @@ def test_stream_list():
     logger.warn(result)
     assert True
 
+
 def test_stream_download():
     result = pcs.stream_download('/apps/test_sdk/testmkdir/404.png')
     logger.warn(result[:10])
+    assert True
+
+
+def test_rapid_upload():
+    content = 'a' * 1024 * 1024
+    pcs.upload('/apps/test_sdk/testmkdir/upload.txt', content,
+               ondup='overwrite')
+    time.sleep(3)
+    result = pcs.rapid_upload('/apps/test_sdk/testmkdir/rapid.txt',
+                              len(content), content_md5(content),
+                              content_crc32(content),
+                              slice_md5(content[:1024 * 256]),
+                              ondup='overwrite')
+    logger.warn(result)
     assert True

@@ -288,3 +288,22 @@ class PCS(object):
         api = self.api_template.format('stream')
         response = requests.get(api, params=params, **kwargs)
         return response.content
+
+    def rapid_upload(self, remote_path, content_length, content_md5,
+                     content_crc32, slice_md5, ondup='', **kwargs):
+        """秒传一个文件。
+        被秒传文件必须大于256KB（即 256*1024 B）
+        """
+        params = {
+            'method': 'rapidupload',
+            'access_token': self.access_token,
+            'path': remote_path,
+            'content-length': content_length,
+            'content-md5': content_md5,
+            'content-crc32': content_crc32,
+            'slice-md5': slice_md5,
+            'ondup': ondup,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
