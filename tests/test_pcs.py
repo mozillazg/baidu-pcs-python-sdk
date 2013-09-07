@@ -3,6 +3,7 @@
 
 import logging
 import pdb
+import time
 
 from baidupcs import PCS
 
@@ -139,5 +140,17 @@ def test_search():
 
 def test_thumbnail():
     result = pcs.thumbnail('/apps/test_sdk/testmkdir/404.png', 20, 20)
+    logger.warn(result)
+    assert True
+
+def test_diff():
+    pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
+    result = pcs.diff()
+    logger.warn(result)
+    new_cursor = result['cursor']
+    time.sleep(60)
+    pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
+               ondup='overwrite')
+    result = pcs.diff(cursor=new_cursor)
     logger.warn(result)
     assert True

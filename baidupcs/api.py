@@ -3,6 +3,7 @@
 
 from urllib import urlencode
 import json
+import pdb
 
 import requests
 
@@ -236,3 +237,15 @@ class PCS(object):
         api = self.api_template.format('thumbnail')
         response = requests.get(api, params=params, **kwargs)
         return response.content
+
+    def diff(self, cursor='null', **kwargs):
+        """文件增量更新操作查询接口。本接口有数秒延迟，但保证返回结果为最终一致。"""
+        params = {
+            'method': 'diff',
+            'access_token': self.access_token,
+            'cursor': cursor,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        pdb.set_trace()
+        return response.json()
