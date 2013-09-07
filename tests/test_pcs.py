@@ -143,6 +143,7 @@ def test_thumbnail():
     logger.warn(result)
     assert True
 
+
 def test_diff():
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
     result = pcs.diff()
@@ -159,5 +160,12 @@ def test_diff():
 def test_video_convert():
     result = pcs.video_convert('/apps/test_sdk/testmkdir/test.mp4',
                                'M3U8_320_240')
+    logger.warn(result)
+    assert True
+
+def test_stream_list():
+    result = pcs.stream_list('image')
+    logger.warn(result)
+    result = pcs.stream_list('doc', filter_path='/apps/test_sdk/test')
     logger.warn(result)
     assert True

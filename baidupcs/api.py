@@ -260,3 +260,19 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.content
+
+    def stream_list(self, file_type, start=0, limit=100,
+                    filter_path='', **kwargs):
+        """以视频、音频、图片及文档四种类型的视图获取所创建应用程序下的
+        文件列表。"""
+        params = {
+            'method': 'list',
+            'access_token': self.access_token,
+            'type': file_type,
+            'start': start,
+            'limit': limit,
+            'filter_path': filter_path,
+        }
+        api = self.api_template.format('stream')
+        response = requests.get(api, params=params, **kwargs)
+        return response.json()
