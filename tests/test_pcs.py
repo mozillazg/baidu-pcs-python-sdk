@@ -4,6 +4,7 @@
 import logging
 import pdb
 import time
+import os
 
 from baidupcs import PCS
 from utils import content_md5, content_crc32, slice_md5
@@ -193,9 +194,25 @@ def test_rapid_upload():
     logger.warn(result)
     assert True
 
+
 def test_add_offline_download_task():
     url = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
     remote_path = '/apps/test_sdk/testmkdir/BaiduYunGuanjia_4.1.0.exe'
     result = pcs.add_offline_download_task(url, remote_path)
+    logger.warn(result)
+    assert True
+
+
+def test_query_offline_download_task():
+    url1 = 'http://yy.client.fwdl.kingsoft.com/Moon-V051770.rar'
+    url2 = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
+    remote_path = '/apps/test_sdk/testmkdir/%s'
+    pdb.set_trace()
+    task1 = pcs.add_offline_download_task(url1,
+                                          remote_path % os.path.basename(url1))
+    task2 = pcs.add_offline_download_task(url2,
+                                          remote_path % os.path.basename(url2))
+    task_ids = [task1['task_id'], task2['task_id']]
+    result = pcs.query_offline_download_task(task_ids)
     logger.warn(result)
     assert True

@@ -308,9 +308,9 @@ class PCS(object):
         response = requests.get(api, params=params, **kwargs)
         return response.json()
 
-    def add_offline_download_task(self, source_url, remote_path, expires=0,
+    def add_offline_download_task(self, source_url, remote_path,
                                   rate_limit=0, timeout=60 * 60,
-                                  callback='', **kwargs):
+                                  expires=0, callback='', **kwargs):
         """添加离线下载任务，实现单个文件离线下载。"""
         params = {
             'method': 'add_task',
@@ -323,6 +323,23 @@ class PCS(object):
             'rate_limit': rate_limit,
             'timeout': timeout,
             'callback': callback,
+        }
+        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
+                         urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
+
+    def query_offline_download_task(self, task_ids, operate_type=1,
+                                    expires=0, **kwargs):
+        """根据任务ID号，查询离线下载任务信息及进度信息。"""
+        params = {
+            'method': 'query_task',
+            'access_token': self.access_token,
+        }
+        data = {
+            'task_ids': ','.join(map(str, task_ids)),
+            'op_type': operate_type,
+            'expires': expires,
         }
         api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
                          urlencode(params))
