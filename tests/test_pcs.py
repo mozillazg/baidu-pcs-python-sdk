@@ -192,3 +192,10 @@ def test_rapid_upload():
                               ondup='overwrite')
     logger.warn(result)
     assert True
+
+def test_add_offline_download_task():
+    url = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
+    remote_path = '/apps/test_sdk/testmkdir/BaiduYunGuanjia_4.1.0.exe'
+    result = pcs.add_offline_download_task(url, remote_path)
+    logger.warn(result)
+    assert True

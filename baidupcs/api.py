@@ -307,3 +307,24 @@ class PCS(object):
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def add_offline_download_task(self, source_url, remote_path, expires=0,
+                                  rate_limit=0, timeout=60 * 60,
+                                  callback='', **kwargs):
+        """添加离线下载任务，实现单个文件离线下载。"""
+        params = {
+            'method': 'add_task',
+            'access_token': self.access_token,
+            'source_url': source_url,
+        }
+        data = {
+            'save_path': remote_path,
+            'expires': expires,
+            'rate_limit': rate_limit,
+            'timeout': timeout,
+            'callback': callback,
+        }
+        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
+                         urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()
