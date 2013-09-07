@@ -216,3 +216,8 @@ def test_query_offline_download_task():
     result = pcs.query_offline_download_task(task_ids)
     logger.warn(result)
     assert True
+
+def test_list_offline_download_task():
+    result = pcs.list_offline_download_task()
+    logger.warn(result)
+    assert True

@@ -55,7 +55,6 @@ class PCS(object):
 
     def upload_superfile(self, remote_path, block_list, ondup='', **kwargs):
         """. """
-        # pdb.set_trace()
         params = {
             'method': 'createsuperfile',
             'access_token': self.access_token,
@@ -344,4 +343,34 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
                          urlencode(params))
         response = requests.post(api, data=data, **kwargs)
+        return response.json()
+
+    def list_offline_download_task(self, create_time=None, status=None,
+                                   need_task_info=1, start=0, limit=10, asc=0,
+                                   source_url=None, remote_path=None,
+                                   expires=None, **kwargs):
+        """查询离线下载任务ID列表及任务信息。"""
+        params = {
+            'method': 'list_task',
+            'access_token': self.access_token,
+            'need_task_info': need_task_info,
+        }
+        data = {
+            'expires': expires,
+            'start': start,
+            'limit': limit,
+            'asc': asc,
+            'source_url': source_url,
+            'save_path': remote_path,
+            'create_time': create_time,
+            'status': status,
+            'need_task_info': need_task_info,
+        }
+        for k, v in data.copy().items():
+            if v is None:
+                data.pop(k)
+        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
+                         urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        pdb.set_trace()
         return response.json()
