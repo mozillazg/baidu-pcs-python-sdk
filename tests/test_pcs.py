@@ -147,10 +147,17 @@ def test_diff():
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
     result = pcs.diff()
     logger.warn(result)
+    logger.warn('\n')
     new_cursor = result['cursor']
     time.sleep(60)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
     result = pcs.diff(cursor=new_cursor)
+    logger.warn(result)
+    assert True
+
+def test_video_convert():
+    result = pcs.video_convert('/apps/test_sdk/testmkdir/test.mp4',
+                               'M3U8_320_240')
     logger.warn(result)
     assert True

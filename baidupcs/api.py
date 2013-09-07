@@ -247,5 +247,16 @@ class PCS(object):
         }
         api = self.api_template.format('file')
         response = requests.get(api, params=params, **kwargs)
-        pdb.set_trace()
         return response.json()
+
+    def video_convert(self, remote_path, video_type, **kwargs):
+        """对视频文件进行转码，实现实时观看视频功能。"""
+        params = {
+            'method': 'streaming',
+            'access_token': self.access_token,
+            'path': remote_path,
+            'type': video_type,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
+        return response.content
