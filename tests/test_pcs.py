@@ -227,3 +227,8 @@ def test_cancel_offline_download_task():
     result = pcs.cancel_offline_download_task(task_id)
     logger.warn(result)
     assert True
+
+def test_list_recycle():
+    result = pcs.list_recycle()
+    logger.warn(result)
+    assert True

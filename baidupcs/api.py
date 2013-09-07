@@ -391,5 +391,16 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
                          urlencode(params))
         response = requests.post(api, data=data, **kwargs)
-        pdb.set_trace()
+        return response.json()
+
+    def list_recycle(self, start=0, limit=1000, **kwargs):
+        """获取回收站中的文件及目录列表。"""
+        params = {
+            'method': 'listrecycle',
+            'access_token': self.access_token,
+            'start': start,
+            'limit': limit,
+        }
+        api = self.api_template.format('file')
+        response = requests.get(api, params=params, **kwargs)
         return response.json()
