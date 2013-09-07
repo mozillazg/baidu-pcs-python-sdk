@@ -221,3 +221,9 @@ def test_list_offline_download_task():
     result = pcs.list_offline_download_task()
     logger.warn(result)
     assert True
+
+def test_cancel_offline_download_task():
+    task_id = pcs.list_offline_download_task()['task_info'][0]['task_id']
+    result = pcs.cancel_offline_download_task(task_id)
+    logger.warn(result)
+    assert True

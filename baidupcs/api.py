@@ -374,3 +374,22 @@ class PCS(object):
         response = requests.post(api, data=data, **kwargs)
         pdb.set_trace()
         return response.json()
+
+    def cancel_offline_download_task(self, task_id, expires=None, **kwargs):
+        """查询离线下载任务ID列表及任务信息。"""
+        params = {
+            'method': 'cancel_task',
+            'access_token': self.access_token,
+        }
+        data = {
+            'expires': expires,
+            'task_id': task_id,
+        }
+        for k, v in data.copy().items():
+            if v is None:
+                data.pop(k)
+        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
+                         urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        pdb.set_trace()
+        return response.json()
