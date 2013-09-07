@@ -276,3 +276,15 @@ class PCS(object):
         api = self.api_template.format('stream')
         response = requests.get(api, params=params, **kwargs)
         return response.json()
+
+    def stream_download(self, remote_path, **kwargs):
+        """为当前用户下载一个流式文件。其参数和返回结果与下载单个文件的相同。
+        """
+        params = {
+            'method': 'download',
+            'access_token': self.access_token,
+            'path': remote_path,
+        }
+        api = self.api_template.format('stream')
+        response = requests.get(api, params=params, **kwargs)
+        return response.content

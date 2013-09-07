@@ -140,7 +140,7 @@ def test_search():
 
 def test_thumbnail():
     result = pcs.thumbnail('/apps/test_sdk/testmkdir/404.png', 20, 20)
-    logger.warn(result)
+    logger.warn(result[:10])
     assert True
 
 
@@ -168,4 +168,9 @@ def test_stream_list():
     logger.warn(result)
     result = pcs.stream_list('doc', filter_path='/apps/test_sdk/test')
     logger.warn(result)
+    assert True
+
+def test_stream_download():
+    result = pcs.stream_download('/apps/test_sdk/testmkdir/404.png')
+    logger.warn(result[:10])
     assert True
