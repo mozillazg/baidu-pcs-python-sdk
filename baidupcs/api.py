@@ -417,3 +417,18 @@ class PCS(object):
         api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
         response = requests.post(api, data=data, **kwargs)
         return response.json()
+
+    def recycle_bin_multi_restore(self, fs_ids, **kwargs):
+        """批量还原文件或目录（非强一致接口，调用后请sleep1秒 ）。"""
+        params = {
+            'method': 'restore',
+            'access_token': self.access_token,
+        }
+        data = {
+            'param': json.dumps({
+                'list': [{'fs_id': fs_id} for fs_id in fs_ids]
+            }),
+        }
+        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
+        response = requests.post(api, data=data, **kwargs)
+        return response.json()

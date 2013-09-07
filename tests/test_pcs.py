@@ -238,3 +238,14 @@ def test_recycle_bin_restore():
     result = pcs.recycle_bin_restore(fs_id)
     logger.warn(result)
     assert True
+
+def recycle_bin_multi_restore():
+    pcs.upload('/apps/test_sdk/testmkdir/1.txt', 'test', ondup='overwrite')
+    pcs.delete('/apps/test_sdk/testmkdir/1.txt')
+    pcs.upload('/apps/test_sdk/testmkdir/2.txt', 'test', ondup='overwrite')
+    pcs.delete('/apps/test_sdk/testmkdir/2.txt')
+    time.sleep(1)
+    fs_ids = [x['fs_id'] for x in pcs.recycle_bin_list()['list'][:1]]
+    result = pcs.recycle_bin_multi_restore(fs_ids)
+    logger.warn(result)
+    assert True
