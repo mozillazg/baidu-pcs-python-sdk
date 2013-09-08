@@ -3,6 +3,7 @@
 
 from urllib import urlencode
 import json
+import pdb
 
 import requests
 
@@ -82,7 +83,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :param file_content: 上传文件的内容。
@@ -140,7 +141,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :param block_list: 子文件内容的 MD5 值列表；子文件至少两个，最多1024个。
@@ -181,7 +182,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :return: Response 对象
@@ -200,7 +201,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :return: Response 对象
@@ -219,7 +220,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :return: Response 对象
@@ -238,7 +239,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :type path_list: list
@@ -261,7 +262,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :param by: 排序字段，缺省根据文件类型排序：
@@ -296,7 +297,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :param to_path: 目标文件/目录在网盘中的路径（包括文件名）。
@@ -304,7 +305,7 @@ class PCS(BaseClass):
                             .. warning::
                                 * 路径长度限制为1000；
                                 * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :return: Response 对象
@@ -317,17 +318,35 @@ class PCS(BaseClass):
         return self._request('file', 'move', data=data, **kwargs)
 
     def multi_move(self, path_list, **kwargs):
-        """批量移动文件/目录。"""
-        params = {
-            'method': 'move',
-            'access_token': self.access_token,
-        }
+        """批量移动文件/目录。
+
+        :param path_list: 源文件地址和目标文件地址列表:
+
+                           >>> path_list = [
+                           ...   ('/apps/test_sdk/test.txt',  # 源文件
+                           ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
+                           ...    ),
+                           ...   ('/apps/test_sdk/test.txt',  # 源文件
+                           ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
+                           ...   ),
+                           ... ]
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                                * 文件名或路径名开头结尾不能是 ``.``
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :type path_list: list
+        :return: Response 对象
+        """
+
         data = {
-            'param': json.dumps({'list': path_list}),
+            'param': json.dumps({
+                'list': [{'from': x[0], 'to': x[1]} for x in path_list]
+            }),
         }
-        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('file', 'move', data=data, **kwargs)
 
     def copy(self, from_path, to_path, **kwargs):
         """拷贝文件(目录)。"""

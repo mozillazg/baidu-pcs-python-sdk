@@ -116,19 +116,17 @@ def test_move():
 
 def test_multi_move():
     pcs.upload('/apps/test_sdk/test.txt', 'test')
+    pcs.upload('/apps/test_sdk/b.txt', 'test')
     path_list = [
-        {
-            'from': '/apps/test_sdk/test.txt',
-            'to': '/apps/test_sdk/testmkdir/b.txt',
-        },
-        {
-            'from': '/apps/test_sdk/testmkdir/b.txt',
-            'to': '/apps/test_sdk/testmkdir/a.txt',
-        }
+        ('/apps/test_sdk/test.txt', '/apps/test_sdk/testmkdir/b.txt'),
+        ('/apps/test_sdk/b.txt', '/apps/test_sdk/testmkdir/a.txt'),
     ]
-    result = pcs.multi_move(path_list)
-    logger.warn(result)
-    assert True
+    response = pcs.multi_move(path_list)
+    logger.warn(response.status_code)
+    assert response.json()
+    logger.warn(response.json())
+    if not response.ok:
+        assert response.json()['error_code'] == 31061
 
 
 def test_copy():
