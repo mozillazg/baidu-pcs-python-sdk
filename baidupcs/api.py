@@ -14,20 +14,28 @@ class BaseClass(object):
         self.access_token = access_token
         self.api_template = api_template
 
-    def _request(self, method, uri, extra_params=None, data=None,
+    def _remove_empty_items(self, data):
+        for k, v in data.copy().items():
+            if v is None:
+                data.pop(k)
+
+    def _request(self, uri, method, extra_params=None, data=None,
                  files=None, **kwargs):
         params = {
             'method': method,
-            'access_token': self.access_token,
+            'access_token': self.access_token
         }
         if extra_params:
             params.update(extra_params)
+            self._remove_empty_items(params)
         if data or files:
             api = '%s?%s' % (self.api_template.format(uri),
                              urlencode(params))
             if data:
+                self._remove_empty_items(data)
                 response = requests.post(api, data=data, **kwargs)
             else:
+                self._remove_empty_items(files)
                 response = requests.post(api, files=files, **kwargs)
         else:
             api = self.api_template.format(uri)
@@ -60,9 +68,9 @@ class PCS(BaseClass):
 
     def info(self, **kwargs):
         """获取当前用户空间配额信息."""
-        return self._request('info', 'quota', **kwargs)
+        return self._request('quota', 'info', **kwargs)
 
-    def upload(self, remote_path, file_content, ondup='', **kwargs):
+    def upload(self, remote_path, file_content, ondup=None, **kwargs):
         """上传单个文件（<2G）.
 
         | 百度PCS服务目前支持最大2G的单个文件上传。
@@ -73,7 +81,7 @@ class PCS(BaseClass):
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -91,7 +99,7 @@ class PCS(BaseClass):
             'ondup': ondup
         }
         files = {'file': file_content}
-        return self._request('upload', 'file', extra_params=params,
+        return self._request('file', 'upload', extra_params=params,
                              files=files, **kwargs)
 
     def upload_tmpfile(self, file_content, **kwargs):
@@ -114,13 +122,13 @@ class PCS(BaseClass):
         """
 
         params = {
-            'type': 'tmpfile',
+            'type': 'tmpfile'
         }
         files = {'file': file_content}
-        return self._request('upload', 'file', extra_params=params,
+        return self._request('file', 'upload', extra_params=params,
                              files=files, **kwargs)
 
-    def upload_superfile(self, remote_path, block_list, ondup='', **kwargs):
+    def upload_superfile(self, remote_path, block_list, ondup=None, **kwargs):
         """分片上传—合并分片文件.
 
         与分片文件上传的 ``upload_tmpfile`` 方法配合使用，
@@ -131,7 +139,7 @@ class PCS(BaseClass):
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -152,7 +160,7 @@ class PCS(BaseClass):
         data = {
             'param': json.dumps({'block_list': block_list}),
         }
-        return self._request('createsuperfile', 'file', extra_params=params,
+        return self._request('file', 'createsuperfile', extra_params=params,
                              data=data, **kwargs)
 
     def download(self, remote_path, **kwargs):
@@ -172,7 +180,7 @@ class PCS(BaseClass):
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -182,7 +190,7 @@ class PCS(BaseClass):
         params = {
             'path': remote_path,
         }
-        return self._request('download', 'file', extra_params=params, **kwargs)
+        return self._request('file', 'download', extra_params=params, **kwargs)
 
     def mkdir(self, remote_path, **kwargs):
         """为当前用户创建一个目录.
@@ -191,7 +199,7 @@ class PCS(BaseClass):
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -201,7 +209,7 @@ class PCS(BaseClass):
         data = {
             'path': remote_path
         }
-        return self._request('mkdir', 'file', data=data, **kwargs)
+        return self._request('file', 'mkdir', data=data, **kwargs)
 
     def meta(self, remote_path, **kwargs):
         """获取单个文件或目录的元信息.
@@ -210,7 +218,7 @@ class PCS(BaseClass):
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -220,16 +228,16 @@ class PCS(BaseClass):
         params = {
             'path': remote_path
         }
-        return self._request('meta', 'file', extra_params=params, **kwargs)
+        return self._request('file', 'meta', extra_params=params, **kwargs)
 
     def multi_meta(self, path_list, **kwargs):
-        """批量获取文件或目录的元信息。
+        """批量获取文件或目录的元信息.
 
         :param path_list: 网盘中文件/目录的路径列表，路径必须以 /apps/ 开头。
 
                             .. warning::
                                 * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
                                 * 文件名或路径名开头结尾不能是 ``.`` 
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
@@ -242,21 +250,32 @@ class PCS(BaseClass):
                 'list': [{'path': path} for path in path_list]
             }),
         }
-        return self._request('meta', 'file', data=data, **kwargs)
+        return self._request('file', 'meta', data=data, **kwargs)
 
-    def list_files(self, remote_path, by='', order='', limit='', **kwargs):
-        """获取目录下的文件列表."""
+    def list_files(self, remote_path, by=None, order=None,
+                   limit=None, **kwargs):
+        """获取目录下的文件列表.
+
+        :param remote_path: 网盘中目录的路径，必须以 /apps/ 开头。
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :param by:
+        :param order:
+        :param limit:
+        """
+
         params = {
-            'method': 'list',
-            'access_token': self.access_token,
             'path': remote_path,
             'by': by,
             'order': order,
-            'limit': limit,
+            'limit': limit
         }
-        api = self.api_template.format('file')
-        response = requests.get(api, params=params, **kwargs)
-        return response.json()
+        return self._request('file', 'list', extra_params=params, **kwargs)
 
     def move(self, from_path, to_path, **kwargs):
         """移动单个文件/目录。"""
