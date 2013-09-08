@@ -4,6 +4,7 @@
 import logging
 import time
 import os
+import pdb
 
 from baidupcs import PCS
 from utils import content_md5, content_crc32, slice_md5
@@ -18,31 +19,55 @@ pcs = PCS(access_token)
 
 
 def test_info():
-    result = pcs.info()
-    logger.warn(result)
-    assert True
+    response = pcs.info()
+    logger.warn(response.status_code)
+    assert response.ok
+    assert response.json()
+    logger.warn(response.json())
 
 
 def test_upload():
-    result = pcs.upload('/apps/test_sdk/test.txt', 'test')
-    logger.warn(result)
-    assert True
+    response = pcs.upload('/apps/test_sdk/test.txt', 'test', ondup='overwrite')
+    logger.warn(response.status_code)
+    assert response.ok
+    assert response.json()
+    logger.warn(response.json())
 
 
-def test_superfile():
-    f1_md5 = pcs.upload_tmpfile('abc')['md5']
-    f2_md5 = pcs.upload_tmpfile('def')['md5']
-    result = pcs.upload_superfile('/apps/test_sdk/super2.txt',
-                                  [f1_md5, f2_md5])
-    logger.warn(result)
-    assert True
+def test_upload_tmpfile():
+    response = pcs.upload_tmpfile('abc')
+    logger.warn(response.status_code)
+    assert response.ok
+    assert response.json()
+    logger.warn(response.json())
+
+
+def test_upload_superfile():
+    f1_md5 = pcs.upload_tmpfile('abc').json()['md5']
+    f2_md5 = pcs.upload_tmpfile('def').json()['md5']
+    time.sleep(1)
+    response = pcs.upload_superfile('/apps/test_sdk/super2.txt',
+                                    [f1_md5, f2_md5], ondup='overwrite')
+    logger.warn(response.status_code)
+    assert response.ok
+    assert response.json()
+    logger.warn(response.json())
 
 
 def test_download():
-    result = pcs.download('/apps/test_sdk/super2.txt')
-    logger.warn(result)
-    assert 'abc' in result
-    assert 'def' in result
+    response = pcs.download('/apps/test_sdk/super2.txt')
+    logger.warn(response.status_code)
+    assert response.ok
+    assert 'abc' in response.content
+
+
+def test_download_range():
+    headers = {'Range': 'bytes=0-2'}
+    response = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
+    assert response.content == 'abc'
+    headers = {'Range': 'bytes=3-5'}
+    response = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
+    assert response.content == 'def'
 
 
 def test_mkdir():
@@ -64,7 +89,7 @@ def test_multi_meta():
     assert True
 
 
-def test_file_list():
+def test_list_files():
     result = pcs.file_list('/apps/test_sdk/testmkdir')
     logger.warn(result)
     assert True
@@ -166,7 +191,7 @@ def test_video_convert():
     assert True
 
 
-def test_stream_list():
+def test_list_streams():
     result = pcs.stream_list('image')
     logger.warn(result)
     result = pcs.stream_list('doc', filter_path='/apps/test_sdk/test')
@@ -174,7 +199,7 @@ def test_stream_list():
     assert True
 
 
-def test_stream_download():
+def test_download_stream():
     result = pcs.stream_download('/apps/test_sdk/testmkdir/404.png')
     logger.warn(result[:10])
     assert True
