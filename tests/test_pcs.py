@@ -80,9 +80,11 @@ def test_mkdir():
 
 
 def test_meta():
-    result = pcs.meta('/apps/test_sdk/superfile.txt')
-    logger.warn(result)
-    assert True
+    response = pcs.meta('/apps/test_sdk/super2.txt')
+    logger.warn(response.status_code)
+    assert response.json()
+    assert response.ok
+    logger.warn(response.json())
 
 
 def test_multi_meta():
