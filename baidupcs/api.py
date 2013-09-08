@@ -294,20 +294,20 @@ class PCS(BaseClass):
 
         :param from_path: 源文件/目录在网盘中的路径（包括文件名）。
 
-                            .. warning::
-                                * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.``
-                                  或空白字符，空白字符包括：
-                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+                          .. warning::
+                              * 路径长度限制为1000；
+                              * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                              * 文件名或路径名开头结尾不能是 ``.``
+                                或空白字符，空白字符包括：
+                                ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :param to_path: 目标文件/目录在网盘中的路径（包括文件名）。
 
-                            .. warning::
-                                * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.``
-                                  或空白字符，空白字符包括：
-                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+                        .. warning::
+                            * 路径长度限制为1000；
+                            * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                            * 文件名或路径名开头结尾不能是 ``.``
+                              或空白字符，空白字符包括：
+                              ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :return: Response 对象
         """
 
@@ -318,25 +318,25 @@ class PCS(BaseClass):
         return self._request('file', 'move', data=data, **kwargs)
 
     def multi_move(self, path_list, **kwargs):
-        """批量移动文件/目录。
+        """批量移动文件/目录.
 
         :param path_list: 源文件地址和目标文件地址列表:
 
-                           >>> path_list = [
-                           ...   ('/apps/test_sdk/test.txt',  # 源文件
-                           ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
-                           ...    ),
-                           ...   ('/apps/test_sdk/test.txt',  # 源文件
-                           ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
-                           ...   ),
-                           ... ]
+                          >>> path_list = [
+                          ...   ('/apps/test_sdk/test.txt',  # 源文件
+                          ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
+                          ...    ),
+                          ...   ('/apps/test_sdk/test.txt',  # 源文件
+                          ...    '/apps/test_sdk/testmkdir/b.txt'  # 目标文件
+                          ...   ),
+                          ... ]
 
-                            .. warning::
-                                * 路径长度限制为1000；
-                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
-                                * 文件名或路径名开头结尾不能是 ``.``
-                                  或空白字符，空白字符包括：
-                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+                          .. warning::
+                              * 路径长度限制为1000；
+                              * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                              * 文件名或路径名开头结尾不能是 ``.``
+                                或空白字符，空白字符包括：
+                                ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
         :type path_list: list
         :return: Response 对象
         """
@@ -349,18 +349,36 @@ class PCS(BaseClass):
         return self._request('file', 'move', data=data, **kwargs)
 
     def copy(self, from_path, to_path, **kwargs):
-        """拷贝文件(目录)。"""
-        params = {
-            'method': 'copy',
-            'access_token': self.access_token,
-        }
+        """拷贝文件或目录.
+
+        :param from_path: 源文件/目录在网盘中的路径（包括文件名）。
+
+                          .. warning::
+                              * 路径长度限制为1000；
+                              * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                              * 文件名或路径名开头结尾不能是 ``.``
+                                或空白字符，空白字符包括：
+                                ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :param to_path: 目标文件/目录在网盘中的路径（包括文件名）。
+
+                        .. warning::
+                            * 路径长度限制为1000；
+                            * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                            * 文件名或路径名开头结尾不能是 ``.``
+                              或空白字符，空白字符包括：
+                              ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :return: Response 对象
+
+        .. warning::
+           ``move`` 操作后，源文件被移动至目标地址；
+           ``copy`` 操作则会保留原文件。
+        """
+
         data = {
             'from': from_path,
             'to': to_path,
         }
-        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('file', 'copy', data=data, **kwargs)
 
     def multi_copy(self, path_list, **kwargs):
         """拷贝文件(目录)。"""

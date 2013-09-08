@@ -131,10 +131,13 @@ def test_multi_move():
 
 def test_copy():
     pcs.upload('/apps/test_sdk/test.txt', 'test')
-    result = pcs.copy('/apps/test_sdk/test.txt',
-                      '/apps/test_sdk/testmkdir/c.txt')
-    logger.warn(result)
-    assert True
+    response = pcs.copy('/apps/test_sdk/test.txt',
+                        '/apps/test_sdk/testmkdir/c.txt')
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.json()
+    if not response.ok:
+        assert response.json()['error_code'] == 31061
 
 
 def test_multi_copy():
