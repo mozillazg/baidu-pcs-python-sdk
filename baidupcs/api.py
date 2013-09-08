@@ -38,7 +38,7 @@ class BaseClass(object):
 class PCS(BaseClass):
     """百度个人云存储（PCS）Python SDK.
 
-    所有 api 方法的返回值均为 Response 对象::
+    所有 api 方法的返回值均为 requests.Response 对象::
 
       >>> pcs = PCS('access_token')
       >>> response = pcs.info()
@@ -223,19 +223,26 @@ class PCS(BaseClass):
         return self._request('meta', 'file', extra_params=params, **kwargs)
 
     def multi_meta(self, path_list, **kwargs):
-        """批量获取文件或目录的元信息。"""
-        params = {
-            'method': 'meta',
-            'access_token': self.access_token,
-        }
+        """批量获取文件或目录的元信息。
+
+        :param path_list: 网盘中文件/目录的路径列表，路径必须以 /apps/ 开头。
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *`` ；
+                                * 文件名或路径名开头结尾不能是 ``.`` 
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :type path_list: list
+        :return: Response 对象
+        """
+
         data = {
             'param': json.dumps({
                 'list': [{'path': path} for path in path_list]
             }),
         }
-        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('meta', 'file', data=data, **kwargs)
 
     def list_files(self, remote_path, by='', order='', limit='', **kwargs):
         """获取目录下的文件列表."""

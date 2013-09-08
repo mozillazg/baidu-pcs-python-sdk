@@ -88,10 +88,12 @@ def test_meta():
 
 
 def test_multi_meta():
-    result = pcs.multi_meta(['/apps/test_sdk/superfile.txt',
-                            '/apps/test_sdk/testmkdir'])
-    logger.warn(result)
-    assert True
+    response = pcs.multi_meta(['/apps/test_sdk/super2.txt',
+                              '/apps/test_sdk/testmkdir'])
+    logger.warn(response.status_code)
+    assert response.json()
+    assert response.ok
+    logger.warn(response.json())
 
 
 def test_list_files():
