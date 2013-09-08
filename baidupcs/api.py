@@ -414,6 +414,11 @@ class PCS(BaseClass):
     def delete(self, remote_path, **kwargs):
         """删除单个文件或目录.
 
+        .. warning::
+           * 文件/目录删除后默认临时存放在回收站内，删除文件或目录的临时存放
+             不占用用户的空间配额；
+           * 存放有效期为10天，10天内可还原回原路径下，10天后则永久删除。
+
         :param remote_path: 网盘中文件/目录的路径，路径必须以 /apps/ 开头。
 
                             .. warning::
@@ -433,6 +438,11 @@ class PCS(BaseClass):
 
     def multi_delete(self, path_list, **kwargs):
         """批量删除文件或目录.
+
+        .. warning::
+           * 文件/目录删除后默认临时存放在回收站内，删除文件或目录的临时存放
+             不占用用户的空间配额；
+           * 存放有效期为10天，10天内可还原回原路径下，10天后则永久删除。
 
         :param path_list: 网盘中文件/目录的路径列表，路径必须以 /apps/ 开头。
 
