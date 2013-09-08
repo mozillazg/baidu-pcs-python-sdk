@@ -97,9 +97,11 @@ def test_multi_meta():
 
 
 def test_list_files():
-    result = pcs.file_list('/apps/test_sdk/testmkdir')
-    logger.warn(result)
-    assert True
+    response = pcs.list_files('/apps/test_sdk/testmkdir')
+    logger.warn(response.status_code)
+    assert response.json()
+    assert response.ok
+    logger.warn(response.json())
 
 
 def test_move():
