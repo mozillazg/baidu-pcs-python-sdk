@@ -71,9 +71,12 @@ def test_download_range():
 
 
 def test_mkdir():
-    result = pcs.mkdir('/apps/test_sdk/testmkdir')
-    logger.warn(result)
-    assert True
+    response = pcs.mkdir('/apps/test_sdk/testmkdir')
+    logger.warn(response.status_code)
+    assert response.json()
+    if not response.ok:
+        assert response.json()['error_code'] == 31061
+    logger.warn(response.json())
 
 
 def test_meta():
