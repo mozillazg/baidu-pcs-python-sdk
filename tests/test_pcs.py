@@ -176,9 +176,11 @@ def test_multi_delete():
 
 
 def test_search():
-    result = pcs.search('/apps/test_sdk/testmkdir', 'a')
-    logger.warn(result)
-    assert True
+    response = pcs.search('/apps/test_sdk/', 'test')
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.json()
+    assert response.ok
 
 
 def test_thumbnail():
