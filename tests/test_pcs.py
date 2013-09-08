@@ -105,10 +105,13 @@ def test_list_files():
 
 
 def test_move():
-    result = pcs.move('/apps/test_sdk/test.txt',
-                      '/apps/test_sdk/testmkdir/a.txt')
-    logger.warn(result)
-    assert True
+    response = pcs.move('/apps/test_sdk/test.txt',
+                        '/apps/test_sdk/testmkdir/a.txt')
+    logger.warn(response.status_code)
+    assert response.json()
+    if not response.ok:
+        assert response.json()['error_code'] == 31061
+    logger.warn(response.json())
 
 
 def test_multi_move():
