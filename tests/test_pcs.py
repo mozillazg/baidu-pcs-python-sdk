@@ -166,10 +166,13 @@ def test_delete():
 
 def test_multi_delete():
     pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
-    result = pcs.multi_delete(['/apps/test_sdk/testmkdir/e.txt',
-                              '/apps/test_sdk/testmkdir/d.txt'])
-    logger.warn(result)
-    assert True
+    pcs.upload('/apps/test_sdk/testmkdir/d.txt', 'test')
+    response = pcs.multi_delete(['/apps/test_sdk/testmkdir/e.txt',
+                                '/apps/test_sdk/testmkdir/d.txt'])
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.json()
+    assert response.ok
 
 
 def test_search():

@@ -290,7 +290,7 @@ class PCS(BaseClass):
         return self._request('file', 'list', extra_params=params, **kwargs)
 
     def move(self, from_path, to_path, **kwargs):
-        """移动单个文件/目录.
+        """移动单个文件或目录.
 
         :param from_path: 源文件/目录在网盘中的路径（包括文件名）。
 
@@ -318,7 +318,7 @@ class PCS(BaseClass):
         return self._request('file', 'move', data=data, **kwargs)
 
     def multi_move(self, path_list, **kwargs):
-        """批量移动文件/目录.
+        """批量移动文件或目录.
 
         :param path_list: 源文件地址和目标文件地址对列表:
 
@@ -432,19 +432,26 @@ class PCS(BaseClass):
         return self._request('file', 'delete', data=data, **kwargs)
 
     def multi_delete(self, path_list, **kwargs):
-        """批量删除文件/目录。"""
-        params = {
-            'method': 'delete',
-            'access_token': self.access_token,
-        }
+        """批量删除文件或目录.
+
+        :param path_list: 网盘中文件/目录的路径列表，路径必须以 /apps/ 开头。
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                                * 文件名或路径名开头结尾不能是 ``.``
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :type path_list: list
+        :return: Response 对象
+        """
+
         data = {
             'param': json.dumps({
                 'list': [{'path': path} for path in path_list]
             }),
         }
-        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('file', 'delete', data=data, **kwargs)
 
     def search(self, remote_path, keyword, recurrent='0', **kwargs):
         """获取目录下的文件列表."""
