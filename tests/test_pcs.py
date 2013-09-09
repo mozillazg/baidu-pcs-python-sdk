@@ -252,13 +252,13 @@ def test_rapid_upload():
     assert response.ok
 
 
-def test_add_offline_download_task():
+def test_add_download_task():
     url = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
     remote_path = '/apps/test_sdk/testmkdir/BaiduYunGuanjia_4.1.0.exe'
-    result = pcs.add_offline_download_task(url, remote_path)
-    logger.warn(result)
-    assert True
-
+    response = pcs.add_download_task(url, remote_path)
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 def test_query_offline_download_task():
     url1 = 'http://yy.client.fwdl.kingsoft.com/Moon-V051770.rar'
