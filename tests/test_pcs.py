@@ -65,11 +65,11 @@ def test_download():
 
 def test_download_range():
     headers = {'Range': 'bytes=0-2'}
-    response = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
-    assert response.content == 'abc'
+    response1 = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
+    assert response1.content == 'abc'
     headers = {'Range': 'bytes=3-5'}
-    response = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
-    assert response.content == 'def'
+    response2 = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
+    assert response2.content == 'def'
 
 
 def test_mkdir():
@@ -125,7 +125,6 @@ def test_multi_move():
     ]
     response = pcs.multi_move(path_list)
     logger.warn(response.status_code)
-    assert response.json()
     logger.warn(response.json())
     if not response.ok:
         assert response.json()['error_code'] == 31061
@@ -137,7 +136,6 @@ def test_copy():
                         '/apps/test_sdk/testmkdir/c.txt')
     logger.warn(response.status_code)
     logger.warn(response.json())
-    assert response.json()
     if not response.ok:
         assert response.json()['error_code'] == 31061
 
@@ -152,7 +150,6 @@ def test_multi_copy():
     response = pcs.multi_copy(path_list)
     logger.warn(response.status_code)
     logger.warn(response.json())
-    assert response.json()
     if not response.ok:
         assert response.json()['error_code'] == 31061
 
@@ -162,7 +159,6 @@ def test_delete():
     response = pcs.delete('/apps/test_sdk/testmkdir/e.txt')
     logger.warn(response.status_code)
     logger.warn(response.json())
-    assert response.json()
     assert response.ok
 
 
@@ -173,7 +169,6 @@ def test_multi_delete():
                                 '/apps/test_sdk/testmkdir/d.txt'])
     logger.warn(response.status_code)
     logger.warn(response.json())
-    assert response.json()
     assert response.ok
 
 
@@ -181,7 +176,6 @@ def test_search():
     response = pcs.search('/apps/test_sdk/', 'test')
     logger.warn(response.status_code)
     logger.warn(response.json())
-    assert response.json()
     assert response.ok
 
 
@@ -196,21 +190,21 @@ def test_thumbnail():
 
 def test_diff():
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
-    response = pcs.diff()
-    new_cursor = response.json()['cursor']
-    time.sleep(5)
+    response0 = pcs.diff()
+    new_cursor = response0.json()['cursor']
+    time.sleep(1)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
-    response = pcs.diff(cursor=new_cursor)
-    new_cursor = response.json()['cursor']
-    time.sleep(5)
+    response1 = pcs.diff(cursor=new_cursor)
+    new_cursor = response1.json()['cursor']
+    time.sleep(1)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
-    response = pcs.diff(cursor=new_cursor)
-    logger.warn(response.status_code)
-    logger.warn(response.json())
-    assert response.json()
-    assert response.ok
+    response2 = pcs.diff(cursor=new_cursor)
+    logger.warn(response2.status_code)
+    logger.warn(response2.json())
+    assert response2.json()
+    assert response2.ok
 
 
 def test_video_convert():
@@ -222,12 +216,12 @@ def test_video_convert():
 
 
 def test_list_streams():
-    response = pcs.list_streams('image')
-    logger.warn(response.json())
-    response = pcs.list_streams('doc', filter_path='/apps/test_sdk/test')
-    logger.warn(response.status_code)
-    logger.warn(response.json())
-    assert response.ok
+    response1 = pcs.list_streams('image')
+    logger.warn(response1.json())
+    response2 = pcs.list_streams('doc', filter_path='/apps/test_sdk/test')
+    logger.warn(response2.status_code)
+    logger.warn(response2.json())
+    assert response2.ok
 
 
 def test_download_stream():
@@ -288,10 +282,10 @@ def test_cancel_download_task():
         assert True
     else:
         task_id = task_info[0]['task_id']
-        response = pcs.cancel_download_task(task_id)
-        logger.warn(response.status_code)
-        logger.warn(response.json())
-        assert response.ok
+        response2 = pcs.cancel_download_task(task_id)
+        logger.warn(response2.status_code)
+        logger.warn(response2.json())
+        assert response2.ok
 
 
 def test_list_recycle_bin():
@@ -307,24 +301,26 @@ def test_restore_recycle_bin():
     pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
     pcs.delete('/apps/test_sdk/testmkdir/10.txt')
     time.sleep(1)
-    response = pcs.list_recycle_bin()
-    fs_id = response['list'][0]['fs_id']
+    response1 = pcs.list_recycle_bin()
+    fs_id = response1.json()['list'][0]['fs_id']
     response = pcs.restore_recycle_bin(fs_id)
     logger.warn(response.status_code)
     logger.warn(response.json())
     assert response.ok
 
 
-def test_recycle_bin_multi_restore():
+def test_multi_restore_recycle_bin():
     pcs.upload('/apps/test_sdk/testmkdir/1.txt', 'test', ondup='overwrite')
     pcs.delete('/apps/test_sdk/testmkdir/1.txt')
     pcs.upload('/apps/test_sdk/testmkdir/2.txt', 'test', ondup='overwrite')
     pcs.delete('/apps/test_sdk/testmkdir/2.txt')
     time.sleep(1)
-    fs_ids = [x['fs_id'] for x in pcs.recycle_bin_list()['list'][:1]]
-    result = pcs.recycle_bin_multi_restore(fs_ids)
-    logger.warn(result)
-    assert True
+    response1 = pcs.list_recycle_bin()
+    fs_ids = [x['fs_id'] for x in response1.json()['list'][:1]]
+    response = pcs.multi_restore_recycle_bin(fs_ids)
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_clean_recycle_bin():
