@@ -7,6 +7,11 @@ API
 .. autoclass:: baidupcs.PCS
 
 
+关于各 api 方法的更多示例请参考 `测试用例 <https://github.com/mozillazg/baidu-pcs-python-sdk/tree/master/tests>`__ 。
+
+关于各 api 方法的 ``response.json()`` 字典值的含义请查看 `百度 PCS 文档 <http://developer.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list>`__ 。
+
+
 基本功能
 --------
 

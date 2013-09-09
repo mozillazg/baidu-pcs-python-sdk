@@ -68,7 +68,11 @@ class PCS(BaseClass):
         super(PCS, self).__init__(access_token, api_template)
 
     def info(self, **kwargs):
-        """获取当前用户空间配额信息."""
+        """获取当前用户空间配额信息.
+
+        :return: Response 对象
+        """
+
         return self._request('quota', 'info', **kwargs)
 
     def upload(self, remote_path, file_content, ondup=None, **kwargs):
