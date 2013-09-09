@@ -231,9 +231,10 @@ def test_list_streams():
 
 
 def test_download_stream():
-    result = pcs.stream_download('/apps/test_sdk/testmkdir/404.png')
-    logger.warn(result[:10])
-    assert True
+    response = pcs.download_stream('/apps/test_sdk/testmkdir/404.png')
+    logger.warn(response.status_code)
+    logger.warn(repr(response.content[:10]))
+    assert response.ok
 
 
 def test_rapid_upload():

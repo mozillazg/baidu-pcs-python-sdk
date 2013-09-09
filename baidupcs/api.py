@@ -637,16 +637,24 @@ class PCS(BaseClass):
                              **kwargs)
 
     def download_stream(self, remote_path, **kwargs):
-        """为当前用户下载一个流式文件。其参数和返回结果与下载单个文件的相同。
+        """为当前用户下载一个流式文件.其参数和返回结果与下载单个文件的相同.
+
+        :param remote_path: 需要下载的文件路径，以/开头的绝对路径，含文件名。
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                                * 文件名或路径名开头结尾不能是 ``.``
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :return: Response 对象
         """
+
         params = {
-            'method': 'download',
-            'access_token': self.access_token,
             'path': remote_path,
         }
-        api = self.api_template.format('stream')
-        response = requests.get(api, params=params, **kwargs)
-        return response.content
+        return self._request('stream', 'download', extra_params=params,
+                             **kwargs)
 
     def rapid_upload(self, remote_path, content_length, content_md5,
                      content_crc32, slice_md5, ondup='', **kwargs):
