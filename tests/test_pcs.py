@@ -196,16 +196,21 @@ def test_thumbnail():
 
 def test_diff():
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
-    result = pcs.diff()
-    logger.warn(result)
-    logger.warn('\n')
-    new_cursor = result['cursor']
+    response = pcs.diff()
+    new_cursor = response.json()['cursor']
     time.sleep(5)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
-    result = pcs.diff(cursor=new_cursor)
-    logger.warn(result)
-    assert True
+    response = pcs.diff(cursor=new_cursor)
+    new_cursor = response.json()['cursor']
+    time.sleep(5)
+    pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
+               ondup='overwrite')
+    response = pcs.diff(cursor=new_cursor)
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.json()
+    assert response.ok
 
 
 def test_video_convert():
