@@ -10,7 +10,7 @@ Welcome to BaiduPCS's documentation!
 
 `百度个人云存储（PCS） <http://developer.baidu.com/ms/pcs>`__ Python SDK
 
-.. |Build| image:: https://api.travis-ci.org/mozillazg/baidu-pcs-python-sdk.png?branch=master
+.. |Build| image:: https://api.travis-ci.org/mozillazg/baidu-pcs-python-sdk.png
    :target: http://travis-ci.org/mozillazg/baidu-pcs-python-sdk
 .. |Pypi version| image:: https://pypip.in/v/baidupcs/badge.png
    :target: https://crate.io/packages/baidupcs
