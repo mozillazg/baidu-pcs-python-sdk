@@ -273,10 +273,11 @@ def test_query_download_tasks():
     assert response.ok
 
 
-def test_list_offline_download_task():
-    result = pcs.list_offline_download_task()
-    logger.warn(result)
-    assert True
+def test_list_download_tasks():
+    response = pcs.list_download_tasks()
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_cancel_offline_download_task():
