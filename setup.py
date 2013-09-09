@@ -4,7 +4,11 @@
 import sys
 import os
 
-import baidupcs
+__title__ = 'baidupcs'
+__version__ = '0.1.0'
+__author__ = 'mozillazg'
+__license__ = 'MIT'
+__copyright__ = 'Copyright (c) 2013 mozillazg'
 
 try:
     from setuptools import setup
@@ -28,14 +32,14 @@ def long_description():
 
 setup(
     name='baidupcs',
-    version=baidupcs.__version__,
-    description=baidupcs.__doc__.strip(),
+    version=__version__,
+    description='百度个人云存储（PCS）Python SDK',
     long_description=long_description(),
     url='https://github.com/mozillazg/baidu-pcs-python-sdk',
     download_url='https://github.com/mozillazg/baidu-pcs-python-sdk',
-    author=baidupcs.__author__,
+    author=__author__,
     author_email='mozillazg101@gmail.com',
-    license=baidupcs.__license__,
+    license=__license__,
     packages=packages,
     package_data={'': ['LICENSE.txt']},
     package_dir={'baidupcs': 'baidupcs'},
