@@ -242,13 +242,14 @@ def test_rapid_upload():
     pcs.upload('/apps/test_sdk/testmkdir/upload.txt', content,
                ondup='overwrite')
     time.sleep(3)
-    result = pcs.rapid_upload('/apps/test_sdk/testmkdir/rapid.txt',
-                              len(content), content_md5(content),
-                              content_crc32(content),
-                              slice_md5(content[:1024 * 256]),
-                              ondup='overwrite')
-    logger.warn(result)
-    assert True
+    response = pcs.rapid_upload('/apps/test_sdk/testmkdir/rapid.txt',
+                                len(content), content_md5(content),
+                                content_crc32(content),
+                                slice_md5(content[:1024 * 256]),
+                                ondup='overwrite')
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_add_offline_download_task():
