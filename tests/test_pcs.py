@@ -260,18 +260,17 @@ def test_add_download_task():
     logger.warn(response.json())
     assert response.ok
 
-def test_query_offline_download_task():
+def test_query_download_tasks():
     url1 = 'http://yy.client.fwdl.kingsoft.com/Moon-V051770.rar'
     url2 = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
     remote_path = '/apps/test_sdk/testmkdir/%s'
-    task1 = pcs.add_offline_download_task(url1,
-                                          remote_path % os.path.basename(url1))
-    task2 = pcs.add_offline_download_task(url2,
-                                          remote_path % os.path.basename(url2))
-    task_ids = [task1['task_id'], task2['task_id']]
-    result = pcs.query_offline_download_task(task_ids)
-    logger.warn(result)
-    assert True
+    task1 = pcs.add_download_task(url1, remote_path % os.path.basename(url1))
+    task2 = pcs.add_download_task(url2, remote_path % os.path.basename(url2))
+    task_ids = [task1.json()['task_id'], task2.json()['task_id']]
+    response = pcs.query_download_tasks(task_ids)
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_list_offline_download_task():

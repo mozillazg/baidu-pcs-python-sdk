@@ -712,7 +712,7 @@ class PCS(BaseClass):
         :type rate_limit: int or long
         :param timeout: 下载超时时间，默认3600秒。
         :param expires: 请求失效时间，如果有，则会校验。
-        :type expires: int or long
+        :type expires: int
         :param callback: 下载完毕后的回调，默认为空。
         :type callback: str
         :return: Response 对象
@@ -730,21 +730,25 @@ class PCS(BaseClass):
                              data=data, **kwargs)
 
     def query_download_tasks(self, task_ids, operate_type=1,
-                             expires=0, **kwargs):
-        """根据任务ID号，查询离线下载任务信息及进度信息。"""
+                             expires=None, **kwargs):
+        """根据任务ID号，查询离线下载任务信息及进度信息。
+
+        :param task_ids: 要查询的任务ID列表
+        :type task_ids: list or tuple
+        :param operate_type:
+                            * 0：查任务信息
+                            * 1：查进度信息，默认为1
+        :param expires: 请求失效时间，如果有，则会校验。
+        :type expires: int
+        :return: Response 对象
+        """
         params = {
-            'method': 'query_task',
-            'access_token': self.access_token,
-        }
-        data = {
             'task_ids': ','.join(map(str, task_ids)),
             'op_type': operate_type,
             'expires': expires,
         }
-        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
-                         urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('services/cloud_dl', 'query_task',
+                             extra_params=params, **kwargs)
 
     def list_download_tasks(self, create_time=None, status=None,
                             need_task_info=1, start=0, limit=10, asc=0,
