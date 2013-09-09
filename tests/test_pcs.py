@@ -123,6 +123,7 @@ def test_multi_move():
         ('/apps/test_sdk/test.txt', '/apps/test_sdk/testmkdir/b.txt'),
         ('/apps/test_sdk/b.txt', '/apps/test_sdk/testmkdir/a.txt'),
     ]
+    time.sleep(1)
     response = pcs.multi_move(path_list)
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -147,6 +148,7 @@ def test_multi_copy():
         ('/apps/test_sdk/test.txt', '/apps/test_sdk/testmkdir/b.txt'),
         ('/apps/test_sdk/b.txt', '/apps/test_sdk/testmkdir/a.txt'),
     ]
+    time.sleep(1)
     response = pcs.multi_copy(path_list)
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -165,6 +167,7 @@ def test_delete():
 def test_multi_delete():
     pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
     pcs.upload('/apps/test_sdk/testmkdir/d.txt', 'test')
+    time.sleep(1)
     response = pcs.multi_delete(['/apps/test_sdk/testmkdir/e.txt',
                                 '/apps/test_sdk/testmkdir/d.txt'])
     logger.warn(response.status_code)
@@ -290,7 +293,9 @@ def test_cancel_download_task():
 
 def test_list_recycle_bin():
     pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
+    time.sleep(1)
     pcs.delete('/apps/test_sdk/testmkdir/10.txt')
+    time.sleep(1)
     response = pcs.list_recycle_bin()
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -311,8 +316,10 @@ def test_restore_recycle_bin():
 
 def test_multi_restore_recycle_bin():
     pcs.upload('/apps/test_sdk/testmkdir/1.txt', 'test', ondup='overwrite')
+    time.sleep(1)
     pcs.delete('/apps/test_sdk/testmkdir/1.txt')
     pcs.upload('/apps/test_sdk/testmkdir/2.txt', 'test', ondup='overwrite')
+    time.sleep(1)
     pcs.delete('/apps/test_sdk/testmkdir/2.txt')
     time.sleep(1)
     response1 = pcs.list_recycle_bin()
