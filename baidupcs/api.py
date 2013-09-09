@@ -548,16 +548,65 @@ class PCS(BaseClass):
         return self._request('file', 'diff', extra_params=params, **kwargs)
 
     def video_convert(self, remote_path, video_type, **kwargs):
-        """对视频文件进行转码，实现实时观看视频功能。"""
+        """对视频文件进行转码，实现实时观看视频功能.
+        可下载支持 HLS/M3U8 的 `媒体云播放器 SDK <HLSSDK_>`__ 配合使用.
+
+        .. _HLSSDK:
+           http://developer.baidu.com/wiki/index.php?title=docs/cplat/media/sdk
+
+        :param remote_path: 需要下载的视频文件路径，以/开头的绝对路径，
+                            需含源文件的文件名。
+
+                            .. warning::
+                                * 路径长度限制为1000；
+                                * 径中不能包含以下字符：``\\\\ ? | " > < : *``；
+                                * 文件名或路径名开头结尾不能是 ``.``
+                                  或空白字符，空白字符包括：
+                                  ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
+        :type remote_path: str
+        :param video_type: 目前支持以下格式：
+                           M3U8_320_240、M3U8_480_224、M3U8_480_360、
+                           M3U8_640_480和M3U8_854_480
+        :type video_type: str
+        :return: Response 对象
+
+        .. warning::
+           目前这个接口支持的源文件格式如下：
+
+           +--------------------------+------------+--------------------------+
+           |格式名称                  |扩展名      |备注                      |
+           +==========================+============+==========================+
+           |Apple HTTP Live Streaming |m3u8/m3u    |iOS支持的视频格式         |
+           +--------------------------+------------+--------------------------+
+           |ASF                       |asf         |视频格式                  |
+           +--------------------------+------------+--------------------------+
+           |AVI                       |avi         |视频格式                  |
+           +--------------------------+------------+--------------------------+
+           |Flash Video (FLV)         |flv         |Macromedia Flash视频格式  |
+           +--------------------------+------------+--------------------------+
+           |GIF Animation             |gif         |视频格式                  |
+           +--------------------------+------------+--------------------------+
+           |Matroska                  |mkv         |Matroska/WebM视频格式     |
+           +--------------------------+------------+--------------------------+
+           |MOV/QuickTime/MP4         |mov/mp4/m4a/|支持3GP、3GP2、PSP、iPod  |
+           |                          |3gp/3g2/mj2 |之类视频格式              |
+           +--------------------------+------------+--------------------------+
+           |MPEG-PS (program stream)  |mpeg        |也就是VOB文件/SVCD/DVD格式|
+           +--------------------------+------------+--------------------------+
+           |MPEG-TS (transport stream)|ts          | 即DVB传输流              |
+           +--------------------------+------------+--------------------------+
+           |RealMedia                 |rm/rmvb     | Real视频格式             |
+           +--------------------------+------------+--------------------------+
+           |WebM                      |webm        | Html视频格式             |
+           +--------------------------+------------+--------------------------+
+        """
+
         params = {
-            'method': 'streaming',
-            'access_token': self.access_token,
             'path': remote_path,
             'type': video_type,
         }
-        api = self.api_template.format('file')
-        response = requests.get(api, params=params, **kwargs)
-        return response.content
+        return self._request('file', 'streaming', extra_params=params,
+                             **kwargs)
 
     def list_streams(self, file_type, start=0, limit=100,
                      filter_path='', **kwargs):

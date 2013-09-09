@@ -214,10 +214,11 @@ def test_diff():
 
 
 def test_video_convert():
-    result = pcs.video_convert('/apps/test_sdk/testmkdir/test.mp4',
-                               'M3U8_320_240')
-    logger.warn(result)
-    assert True
+    response = pcs.video_convert('/apps/test_sdk/testmkdir/test.mp4',
+                                 'M3U8_320_240')
+    logger.warn(response.status_code)
+    logger.warn(response.content)
+    assert response.ok
 
 
 def test_list_streams():
