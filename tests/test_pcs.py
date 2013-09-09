@@ -5,6 +5,8 @@ import logging
 import time
 import os
 import pdb
+# from PIL import Image
+# from StringIO import StringIO
 
 from baidupcs import PCS
 from utils import content_md5, content_crc32, slice_md5
@@ -184,9 +186,12 @@ def test_search():
 
 
 def test_thumbnail():
-    result = pcs.thumbnail('/apps/test_sdk/testmkdir/404.png', 20, 20)
-    logger.warn(result[:10])
-    assert True
+    response = pcs.thumbnail('/apps/test_sdk/testmkdir/404.png', 100, 100)
+    logger.warn(response.status_code)
+    logger.warn(repr(response.content[:10]))
+    # im = Image.open(StringIO(response.content))
+    # im.show()
+    assert response.ok
 
 
 def test_diff():
