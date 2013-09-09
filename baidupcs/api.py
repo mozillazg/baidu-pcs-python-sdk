@@ -831,7 +831,10 @@ class PCS(BaseClass):
         return response.json()
 
     def restore_recycle_bin(self, fs_id, **kwargs):
-        """还原单个文件或目录（非强一致接口，调用后请sleep 1秒读取）。"""
+        """还原单个文件或目录（非强一致接口，调用后请sleep 1秒读取）.
+
+        """
+
         params = {
             'method': 'restore',
             'access_token': self.access_token,
@@ -861,7 +864,7 @@ class PCS(BaseClass):
     def clean_recycle_bin(self, **kwargs):
         """清空回收站."""
 
-        params = {
+        data = {
             'type': 'recycle',
         }
-        return self._request('file', 'delete', extra_params=params, **kwargs)
+        return self._request('file', 'delete', data=data, **kwargs)
