@@ -9,8 +9,9 @@ Welcome to BaiduPCS's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
+   api
 
 
 Indices and tables
