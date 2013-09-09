@@ -819,16 +819,19 @@ class PCS(BaseClass):
                              data=data, **kwargs)
 
     def list_recycle_bin(self, start=0, limit=1000, **kwargs):
-        """获取回收站中的文件及目录列表。"""
+        """获取回收站中的文件及目录列表.
+
+        :param start: 返回条目的起始值，缺省值为0
+        :param limit: 返回条目的长度，缺省值为1000
+        :return: Response 对象
+        """
+
         params = {
-            'method': 'listrecycle',
-            'access_token': self.access_token,
             'start': start,
             'limit': limit,
         }
-        api = self.api_template.format('file')
-        response = requests.get(api, params=params, **kwargs)
-        return response.json()
+        return self._request('file', 'listrecycle',
+                             extra_params=params, **kwargs)
 
     def restore_recycle_bin(self, fs_id, **kwargs):
         """还原单个文件或目录（非强一致接口，调用后请sleep 1秒读取）.

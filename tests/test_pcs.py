@@ -294,10 +294,13 @@ def test_cancel_download_task():
         assert response.ok
 
 
-def test_recycle_bin_list():
-    result = pcs.recycle_bin_list()
-    logger.warn(result)
-    assert True
+def test_list_recycle_bin():
+    pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
+    pcs.delete('/apps/test_sdk/testmkdir/10.txt')
+    response = pcs.list_recycle_bin()
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_restore_recycle_bin():
