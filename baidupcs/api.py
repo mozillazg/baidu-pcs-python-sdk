@@ -802,22 +802,21 @@ class PCS(BaseClass):
                              data=data, **kwargs)
 
     def cancel_download_task(self, task_id, expires=None, **kwargs):
-        """查询离线下载任务ID列表及任务信息。"""
-        params = {
-            'method': 'cancel_task',
-            'access_token': self.access_token,
-        }
+        """取消离线下载任务.
+
+        :param task_id: 要取消的任务ID号。
+        :type task_id: str
+        :param expires: 请求失效时间，如果有，则会校验。
+        :type expires: int
+        :return: Response 对象
+        """
+
         data = {
             'expires': expires,
             'task_id': task_id,
         }
-        for k, v in data.copy().items():
-            if v is None:
-                data.pop(k)
-        api = '%s?%s' % (self.api_template.format('services/cloud_dl'),
-                         urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('services/cloud_dl', 'cancle_task',
+                             data=data, **kwargs)
 
     def list_recycle_bin(self, start=0, limit=1000, **kwargs):
         """获取回收站中的文件及目录列表。"""
@@ -860,12 +859,9 @@ class PCS(BaseClass):
         return response.json()
 
     def clean_recycle_bin(self, **kwargs):
-        """清空回收站。"""
+        """清空回收站."""
+
         params = {
-            'method': 'delete',
-            'access_token': self.access_token,
             'type': 'recycle',
         }
-        api = self.api_template.format('file')
-        response = requests.get(api, params=params, **kwargs)
-        return response.json()
+        return self._request('file', 'delete', extra_params=params, **kwargs)

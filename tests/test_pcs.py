@@ -280,16 +280,18 @@ def test_list_download_tasks():
     assert response.ok
 
 
-def test_cancel_offline_download_task():
-    task_info = pcs.list_offline_download_task()['task_info']
+def test_cancel_download_task():
+    response = pcs.list_download_tasks()
+    task_info = response.json()['task_info']
+    logger.warn(response.json())
     if not task_info:
-        logger.warn('\n')
         assert True
     else:
         task_id = task_info[0]['task_id']
-        result = pcs.cancel_offline_download_task(task_id)
-        logger.warn(result)
-        assert True
+        response = pcs.cancel_download_task(task_id)
+        logger.warn(response.status_code)
+        logger.warn(response.json())
+        assert response.ok
 
 
 def test_recycle_bin_list():
@@ -317,7 +319,8 @@ def test_recycle_bin_multi_restore():
     assert True
 
 
-def test_recycle_bin_clean():
-    result = pcs.recycle_bin_clean()
-    logger.warn(result)
-    assert True
+def test_clean_recycle_bin():
+    response = pcs.clean_recycle_bin()
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
