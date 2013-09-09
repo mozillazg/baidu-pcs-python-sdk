@@ -158,6 +158,7 @@ def test_multi_copy():
 
 def test_delete():
     pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
+    time.sleep(1)
     response = pcs.delete('/apps/test_sdk/testmkdir/e.txt')
     logger.warn(response.status_code)
     logger.warn(response.json())
