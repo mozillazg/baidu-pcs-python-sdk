@@ -222,11 +222,12 @@ def test_video_convert():
 
 
 def test_list_streams():
-    result = pcs.stream_list('image')
-    logger.warn(result)
-    result = pcs.stream_list('doc', filter_path='/apps/test_sdk/test')
-    logger.warn(result)
-    assert True
+    response = pcs.list_streams('image')
+    logger.warn(response.json())
+    response = pcs.list_streams('doc', filter_path='/apps/test_sdk/test')
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_download_stream():
