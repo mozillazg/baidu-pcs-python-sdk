@@ -833,18 +833,15 @@ class PCS(BaseClass):
     def restore_recycle_bin(self, fs_id, **kwargs):
         """还原单个文件或目录（非强一致接口，调用后请sleep 1秒读取）.
 
+        :param fs_id: 所还原的文件或目录在PCS的临时唯一标识ID。
+        :type fs_id: str
+        :return: Response 对象
         """
 
-        params = {
-            'method': 'restore',
-            'access_token': self.access_token,
-        }
         data = {
             'fs_id': fs_id,
         }
-        api = '%s?%s' % (self.api_template.format('file'), urlencode(params))
-        response = requests.post(api, data=data, **kwargs)
-        return response.json()
+        return self._request('file', 'restore', data=data, **kwargs)
 
     def multi_restore_recycle_bin(self, fs_ids, **kwargs):
         """批量还原文件或目录（非强一致接口，调用后请sleep1秒 ）。"""
@@ -862,7 +859,10 @@ class PCS(BaseClass):
         return response.json()
 
     def clean_recycle_bin(self, **kwargs):
-        """清空回收站."""
+        """清空回收站.
+
+        :return: Response 对象
+        """
 
         data = {
             'type': 'recycle',

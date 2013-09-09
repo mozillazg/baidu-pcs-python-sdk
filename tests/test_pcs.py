@@ -300,11 +300,16 @@ def test_recycle_bin_list():
     assert True
 
 
-def test_recycle_bin_restore():
-    fs_id = pcs.recycle_bin_list()['list'][0]['fs_id']
-    result = pcs.recycle_bin_restore(fs_id)
-    logger.warn(result)
-    assert True
+def test_restore_recycle_bin():
+    pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
+    pcs.delete('/apps/test_sdk/testmkdir/10.txt')
+    time.sleep(1)
+    response = pcs.list_recycle_bin()
+    fs_id = response['list'][0]['fs_id']
+    response = pcs.restore_recycle_bin(fs_id)
+    logger.warn(response.status_code)
+    logger.warn(response.json())
+    assert response.ok
 
 
 def test_recycle_bin_multi_restore():
