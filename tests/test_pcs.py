@@ -9,7 +9,7 @@ import pdb
 # from StringIO import StringIO
 
 from baidupcs import PCS
-from utils import content_md5, content_crc32, slice_md5
+from .utils import content_md5, content_crc32, slice_md5
 
 logging.basicConfig(level=logging.WARN,
                     format='\n%(funcName)s - %(lineno)d\n%(message)s')
@@ -60,16 +60,16 @@ def test_download():
     response = pcs.download('/apps/test_sdk/super2.txt')
     logger.warn(response.status_code)
     assert response.ok
-    assert 'abc' in response.content
+    assert 'abc'.encode() in response.content
 
 
 def test_download_range():
     headers = {'Range': 'bytes=0-2'}
     response1 = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
-    assert response1.content == 'abc'
+    assert response1.content == 'abc'.encode()
     headers = {'Range': 'bytes=3-5'}
     response2 = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
-    assert response2.content == 'def'
+    assert response2.content == 'def'.encode()
 
 
 def test_mkdir():
@@ -236,7 +236,7 @@ def test_download_stream():
 
 
 def test_rapid_upload():
-    content = 'a' * 1024 * 1024
+    content = ('a' * 1024 * 1024).encode('utf8')
     pcs.upload('/apps/test_sdk/testmkdir/upload.txt', content,
                ondup='overwrite')
     time.sleep(3)
