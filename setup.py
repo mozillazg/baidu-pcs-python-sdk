@@ -59,4 +59,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Topic :: Utilities',
     ],
+    keywords='百度网盘, 百度云, SDK',
 )
