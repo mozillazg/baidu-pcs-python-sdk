@@ -5,7 +5,7 @@ import sys
 import os
 
 __title__ = 'baidupcs'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 __author__ = 'mozillazg'
 __license__ = 'MIT'
 __copyright__ = 'Copyright (c) 2013 mozillazg'
@@ -52,9 +52,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 2 :: Only',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Utilities',
     ],
 )
