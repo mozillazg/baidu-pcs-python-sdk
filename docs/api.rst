@@ -4,6 +4,16 @@ API
 .. .. autoclass:: requests.Response
 ..    :members:
 
+
+错误和异常
+----------
+
+.. autoclass:: baidupcs.InvalidToken
+
+
+PCS 类
+------
+
 .. autoclass:: baidupcs.PCS
 
 
