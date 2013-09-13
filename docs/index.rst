@@ -17,10 +17,15 @@ Welcome to BaiduPCS's documentation!
 .. |Pypi downloads| image:: https://pypip.in/d/baidupcs/badge.png
    :target: https://crate.io/packages/baidupcs
 
+* Documentation: http://baidupcs.rtfd.org
+* GitHub: https://github.com/mozillazg/baidu-pcs-python-sdk
+* Free software: MIT license
+* PyPI: https://pypi.python.org/pypi/baidupcs
+* Python version: 2.6, 2.7, 3.3
+
 
 Contents
 --------
-
 
 .. toctree::
     :maxdepth: 4
@@ -30,20 +35,8 @@ Contents
     changelog
 
 
-License
--------
-
-Licensed under the `MIT License <http://en.wikipedia.org/wiki/MIT_License>`__.
-
-
-Souce Code
-----------
-
-The source code can be found on `github <https://github.com/mozillazg/baidu-pcs-python-sdk>`__.
-
-
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

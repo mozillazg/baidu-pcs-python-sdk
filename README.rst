@@ -40,7 +40,6 @@ Basic Usage
     200
     >>> response.content
     '{"quota":6442450944,"used":5138887,"request_id":1216061570}'
-    >>>
     >>> response.json()
     {u'used': 5138887, u'quota': 6442450944L, u'request_id': 1216061570}
 
