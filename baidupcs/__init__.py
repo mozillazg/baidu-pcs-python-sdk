@@ -9,4 +9,4 @@ __author__ = 'mozillazg'
 __license__ = 'MIT'
 __copyright__ = 'Copyright (c) 2013 mozillazg'
 
-from .api import PCS
+from .api import PCS, InvalidToken
