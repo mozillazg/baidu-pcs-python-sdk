@@ -3,6 +3,7 @@
 *.pyo
 *.swo
 __pycache__/
-docs/_build
-dist
-baidupcs.egg-info
+docs/_build/
+dist/
+baidupcs.egg-info/
+.env/
