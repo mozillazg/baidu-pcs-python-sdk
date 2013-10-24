@@ -112,7 +112,8 @@ class PCS(BaseClass):
                                 * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
-        :param file_content: 上传文件的内容。
+        :param file_content: 上传文件的内容 。
+                             (e.g. ``open('foobar', 'rb').read()`` )
         :param ondup: （可选）
 
                       * 'overwrite'：表示覆盖同名文件；
@@ -145,6 +146,7 @@ class PCS(BaseClass):
         也可以通过分片上传文件并调用 ``upload_superfile`` 接口的方式实现。
 
         :param file_content: 上传文件的内容
+                             (e.g. ``open('foobar', 'rb').read()`` )
         :return: Response 对象
         """
 
