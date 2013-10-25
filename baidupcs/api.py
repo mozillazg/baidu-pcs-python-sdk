@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from functools import wraps
+import json
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
-
-import json
-from functools import wraps
 
 import requests
 
@@ -42,8 +41,8 @@ class BaseClass(object):
                 data.pop(k)
 
     @check_token
-    def _request(self, uri, method, extra_params=None, data=None,
-                 files=None, **kwargs):
+    def _request(self, uri, method, url=None, extra_params=None,
+                 data=None, files=None, **kwargs):
         params = {
             'method': method,
             'access_token': self.access_token
@@ -51,25 +50,32 @@ class BaseClass(object):
         if extra_params:
             params.update(extra_params)
             self._remove_empty_items(params)
+        if not url:
+            url = self.api_template.format(uri)
         if data or files:
-            api = '%s?%s' % (self.api_template.format(uri),
-                             urlencode(params))
+            api = '%s?%s' % (url, urlencode(params))
             if data:
                 self._remove_empty_items(data)
-                response = requests.post(api, data=data, **kwargs)
+                # 因为会出现
+                # SSLError: hostname 'c.pcs.baidu.com'
+                # doesn't match u'pcs.baidu.com'
+                # 所以禁用 ssl 证书验证
+                response = requests.post(api, data=data, verify=False,
+                                         **kwargs)
             else:
                 self._remove_empty_items(files)
-                response = requests.post(api, files=files, **kwargs)
+                response = requests.post(api, files=files, verify=False,
+                                         **kwargs)
         else:
-            api = self.api_template.format(uri)
-            response = requests.get(api, params=params, **kwargs)
+            api = url
+            response = requests.get(api, params=params, verify=False, **kwargs)
         return response
 
 
 class PCS(BaseClass):
     """百度个人云存储（PCS）Python SDK.
 
-    所有 api 方法的返回值均为 requests.Response 对象::
+    所有 api 方法的返回值均为 ``requests.Response`` 对象::
 
       >>> pcs = PCS('access_token')
       >>> response = pcs.info()
@@ -79,7 +85,7 @@ class PCS(BaseClass):
       True
       >>> response.status_code  # 状态码
       200
-      >>> response.content  # 原始内容（二进制，json 字符串）
+      >>> response.content  # 原始内容（二进制/json 字符串）
       '{"quota":6442450944,"used":5138887,"request_id":1216061570}'
       >>>
       >>> response.json()  # 将 json 字符串转换为 python dict
@@ -112,8 +118,8 @@ class PCS(BaseClass):
                                 * 文件名或路径名开头结尾不能是 ``.``
                                   或空白字符，空白字符包括：
                                   ``\\r, \\n, \\t, 空格, \\0, \\x0B`` 。
-        :param file_content: 上传文件的内容 。
-                             (e.g. ``open('foobar', 'rb').read()`` )
+        :param file_content: 上传文件的内容/文件对象 。
+                             (e.g. ``open('foobar', 'rb')`` )
         :param ondup: （可选）
 
                       * 'overwrite'：表示覆盖同名文件；
@@ -127,7 +133,8 @@ class PCS(BaseClass):
             'ondup': ondup
         }
         files = {'file': file_content}
-        return self._request('file', 'upload', extra_params=params,
+        url = 'https://c.pcs.baidu.com/rest/2.0/pcs/file'
+        return self._request('file', 'upload', url=url, extra_params=params,
                              files=files, **kwargs)
 
     def upload_tmpfile(self, file_content, **kwargs):
@@ -145,8 +152,8 @@ class PCS(BaseClass):
         除此之外，如果应用中需要支持断点续传的功能，
         也可以通过分片上传文件并调用 ``upload_superfile`` 接口的方式实现。
 
-        :param file_content: 上传文件的内容
-                             (e.g. ``open('foobar', 'rb').read()`` )
+        :param file_content: 上传文件的内容/文件对象
+                             (e.g. ``open('foobar', 'rb')`` )
         :return: Response 对象
         """
 
@@ -154,7 +161,8 @@ class PCS(BaseClass):
             'type': 'tmpfile'
         }
         files = {'file': file_content}
-        return self._request('file', 'upload', extra_params=params,
+        url = 'https://c.pcs.baidu.com/rest/2.0/pcs/file'
+        return self._request('file', 'upload', url=url, extra_params=params,
                              files=files, **kwargs)
 
     def upload_superfile(self, remote_path, block_list, ondup=None, **kwargs):
@@ -202,6 +210,7 @@ class PCS(BaseClass):
         那么响应消息中会返回该文件的第二个100字节内容::
 
           >>> headers = {'Range': 'bytes=0-99'}
+          >>> pcs = PCS('token')
           >>> pcs.download('/apps/test_sdk/test.txt', headers=headers)
 
         :param remote_path: 网盘中文件的路径（包含文件名）。
@@ -219,7 +228,9 @@ class PCS(BaseClass):
         params = {
             'path': remote_path,
         }
-        return self._request('file', 'download', extra_params=params, **kwargs)
+        url = 'https://d.pcs.baidu.com/rest/2.0/pcs/file'
+        return self._request('file', 'download', url=url,
+                             extra_params=params, **kwargs)
 
     def mkdir(self, remote_path, **kwargs):
         """为当前用户创建一个目录.
@@ -681,8 +692,9 @@ class PCS(BaseClass):
         params = {
             'path': remote_path,
         }
-        return self._request('stream', 'download', extra_params=params,
-                             **kwargs)
+        url = 'https://d.pcs.baidu.com/rest/2.0/pcs/file'
+        return self._request('stream', 'download', url=url,
+                             extra_params=params, **kwargs)
 
     def rapid_upload(self, remote_path, content_length, content_md5,
                      content_crc32, slice_md5, ondup=None, **kwargs):
