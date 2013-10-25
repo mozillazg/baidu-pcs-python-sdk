@@ -4,7 +4,7 @@
 import logging
 import time
 import os
-import pdb
+# import pdb
 # from PIL import Image
 # from StringIO import StringIO
 
@@ -15,12 +15,20 @@ logging.basicConfig(level=logging.WARN,
                     format='\n%(funcName)s - %(lineno)d\n%(message)s')
 logger = logging.getLogger(__name__)
 
-access_token = '3.3f56524f9e796191ce5baa84239feb15.2592000.1380728222.'
-access_token += '570579779-1274287'
+access_token = '3.61bf23079c9a472f498d778ee1c40c25.2592000.1383872758'
+access_token += '.570579779-1274287'
 pcs = PCS(access_token)
 
 
+def _file(filename):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    filepath = os.path.join(current_dir, filename)
+    f = open(filepath, 'rb')  # rb 模式
+    return f
+
+
 def test_info():
+    """磁盘配额信息"""
     response = pcs.info()
     logger.warn(response.status_code)
     assert response.ok
@@ -29,7 +37,9 @@ def test_info():
 
 
 def test_upload():
-    response = pcs.upload('/apps/test_sdk/test.txt', 'test', ondup='overwrite')
+    """上传"""
+    response = pcs.upload('/apps/test_sdk/test.txt', _file('test1'),
+                          ondup='overwrite')
     logger.warn(response.status_code)
     assert response.ok
     assert response.json()
@@ -37,7 +47,8 @@ def test_upload():
 
 
 def test_upload_tmpfile():
-    response = pcs.upload_tmpfile('abc')
+    """分片上传 - 上传临时文件"""
+    response = pcs.upload_tmpfile(_file('test1'))
     logger.warn(response.status_code)
     assert response.ok
     assert response.json()
@@ -45,9 +56,9 @@ def test_upload_tmpfile():
 
 
 def test_upload_superfile():
-    f1_md5 = pcs.upload_tmpfile('abc').json()['md5']
-    f2_md5 = pcs.upload_tmpfile('def').json()['md5']
-    time.sleep(1)
+    f1_md5 = pcs.upload_tmpfile(_file('test1')).json()['md5']
+    f2_md5 = pcs.upload_tmpfile(_file('test2')).json()['md5']
+    time.sleep(2)
     response = pcs.upload_superfile('/apps/test_sdk/super2.txt',
                                     [f1_md5, f2_md5], ondup='overwrite')
     logger.warn(response.status_code)
@@ -64,6 +75,7 @@ def test_download():
 
 
 def test_download_range():
+    test_upload_superfile()
     headers = {'Range': 'bytes=0-2'}
     response1 = pcs.download('/apps/test_sdk/super2.txt', headers=headers)
     assert response1.content == 'abc'.encode()
@@ -117,13 +129,13 @@ def test_move():
 
 
 def test_multi_move():
-    pcs.upload('/apps/test_sdk/test.txt', 'test')
-    pcs.upload('/apps/test_sdk/b.txt', 'test')
+    pcs.upload('/apps/test_sdk/test.txt', _file('test1'))
+    pcs.upload('/apps/test_sdk/b.txt', _file('test1'))
     path_list = [
         ('/apps/test_sdk/test.txt', '/apps/test_sdk/testmkdir/b.txt'),
         ('/apps/test_sdk/b.txt', '/apps/test_sdk/testmkdir/a.txt'),
     ]
-    time.sleep(1)
+    time.sleep(2)
     response = pcs.multi_move(path_list)
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -132,7 +144,7 @@ def test_multi_move():
 
 
 def test_copy():
-    pcs.upload('/apps/test_sdk/test.txt', 'test')
+    pcs.upload('/apps/test_sdk/test.txt', _file('test1'))
     response = pcs.copy('/apps/test_sdk/test.txt',
                         '/apps/test_sdk/testmkdir/c.txt')
     logger.warn(response.status_code)
@@ -142,13 +154,13 @@ def test_copy():
 
 
 def test_multi_copy():
-    pcs.upload('/apps/test_sdk/test.txt', 'test')
-    pcs.upload('/apps/test_sdk/b.txt', 'test')
+    pcs.upload('/apps/test_sdk/test.txt', _file('test1'))
+    pcs.upload('/apps/test_sdk/b.txt', _file('test2'))
     path_list = [
         ('/apps/test_sdk/test.txt', '/apps/test_sdk/testmkdir/b.txt'),
         ('/apps/test_sdk/b.txt', '/apps/test_sdk/testmkdir/a.txt'),
     ]
-    time.sleep(1)
+    time.sleep(2)
     response = pcs.multi_copy(path_list)
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -157,8 +169,8 @@ def test_multi_copy():
 
 
 def test_delete():
-    pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
-    time.sleep(1)
+    pcs.upload('/apps/test_sdk/testmkdir/e.txt', _file('test3'))
+    time.sleep(2)
     response = pcs.delete('/apps/test_sdk/testmkdir/e.txt')
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -166,9 +178,9 @@ def test_delete():
 
 
 def test_multi_delete():
-    pcs.upload('/apps/test_sdk/testmkdir/e.txt', 'test')
-    pcs.upload('/apps/test_sdk/testmkdir/d.txt', 'test')
-    time.sleep(1)
+    pcs.upload('/apps/test_sdk/testmkdir/e.txt', _file('test1').read())
+    pcs.upload('/apps/test_sdk/testmkdir/d.txt', _file('test2').read())
+    time.sleep(2)
     response = pcs.multi_delete(['/apps/test_sdk/testmkdir/e.txt',
                                 '/apps/test_sdk/testmkdir/d.txt'])
     logger.warn(response.status_code)
@@ -177,6 +189,8 @@ def test_multi_delete():
 
 
 def test_search():
+    response = pcs.upload('/apps/test_sdk/test.txt', _file('test1'),
+                          ondup='overwrite')
     response = pcs.search('/apps/test_sdk/', 'test')
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -193,15 +207,16 @@ def test_thumbnail():
 
 
 def test_diff():
-    pcs.upload('/apps/test_sdk/testmkdir/h.txt', 'testabc', ondup='overwrite')
+    pcs.upload('/apps/test_sdk/testmkdir/h.txt', _file('test2'),
+               ondup='overwrite')
     response0 = pcs.diff()
     new_cursor = response0.json()['cursor']
-    time.sleep(1)
+    time.sleep(2)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
     response1 = pcs.diff(cursor=new_cursor)
     new_cursor = response1.json()['cursor']
-    time.sleep(1)
+    time.sleep(2)
     pcs.upload('/apps/test_sdk/testmkdir/h.txt', str(time.time()),
                ondup='overwrite')
     response2 = pcs.diff(cursor=new_cursor)
@@ -251,19 +266,21 @@ def test_rapid_upload():
 
 
 def test_add_download_task():
-    url = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
-    remote_path = '/apps/test_sdk/testmkdir/BaiduYunGuanjia_4.1.0.exe'
+    url = 'http://img3.douban.com/pics/nav/logo_db.png'
+    remote_path = '/apps/test_sdk/testmkdir/bdlogo.gif'
     response = pcs.add_download_task(url, remote_path)
     logger.warn(response.status_code)
     logger.warn(response.json())
     assert response.ok
 
+
 def test_query_download_tasks():
-    url1 = 'http://yy.client.fwdl.kingsoft.com/Moon-V051770.rar'
-    url2 = 'http://bcscdn.baidu.com/netdisk/BaiduYunGuanjia_4.1.0.exe'
+    url1 = 'http://img3.douban.com/pics/nav/lg_main_a11_1.png'
+    url2 = 'http://img3.douban.com/pics/nav/logo_db.png'
     remote_path = '/apps/test_sdk/testmkdir/%s'
     task1 = pcs.add_download_task(url1, remote_path % os.path.basename(url1))
     task2 = pcs.add_download_task(url2, remote_path % os.path.basename(url2))
+    time.sleep(2)
     task_ids = [task1.json()['task_id'], task2.json()['task_id']]
     response = pcs.query_download_tasks(task_ids)
     logger.warn(response.status_code)
@@ -293,10 +310,11 @@ def test_cancel_download_task():
 
 
 def test_list_recycle_bin():
-    pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
-    time.sleep(1)
+    pcs.upload('/apps/test_sdk/testmkdir/10.txt', _file('test2'),
+               ondup='overwrite')
+    time.sleep(2)
     pcs.delete('/apps/test_sdk/testmkdir/10.txt')
-    time.sleep(1)
+    time.sleep(2)
     response = pcs.list_recycle_bin()
     logger.warn(response.status_code)
     logger.warn(response.json())
@@ -304,9 +322,10 @@ def test_list_recycle_bin():
 
 
 def test_restore_recycle_bin():
-    pcs.upload('/apps/test_sdk/testmkdir/10.txt', 'test', ondup='overwrite')
+    pcs.upload('/apps/test_sdk/testmkdir/10.txt', _file('test1'),
+               ondup='overwrite')
     pcs.delete('/apps/test_sdk/testmkdir/10.txt')
-    time.sleep(1)
+    time.sleep(2)
     response1 = pcs.list_recycle_bin()
     fs_id = response1.json()['list'][0]['fs_id']
     response = pcs.restore_recycle_bin(fs_id)
@@ -316,13 +335,15 @@ def test_restore_recycle_bin():
 
 
 def test_multi_restore_recycle_bin():
-    pcs.upload('/apps/test_sdk/testmkdir/1.txt', 'test', ondup='overwrite')
-    time.sleep(1)
+    pcs.upload('/apps/test_sdk/testmkdir/1.txt', _file('test2'),
+               ondup='overwrite')
+    time.sleep(2)
     pcs.delete('/apps/test_sdk/testmkdir/1.txt')
-    pcs.upload('/apps/test_sdk/testmkdir/2.txt', 'test', ondup='overwrite')
-    time.sleep(1)
+    pcs.upload('/apps/test_sdk/testmkdir/2.txt', _file('test1'),
+               ondup='overwrite')
+    time.sleep(2)
     pcs.delete('/apps/test_sdk/testmkdir/2.txt')
-    time.sleep(1)
+    time.sleep(2)
     response1 = pcs.list_recycle_bin()
     fs_ids = [x['fs_id'] for x in response1.json()['list'][:1]]
     response = pcs.multi_restore_recycle_bin(fs_ids)
