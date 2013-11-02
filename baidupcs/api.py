@@ -56,19 +56,13 @@ class BaseClass(object):
             api = '%s?%s' % (url, urlencode(params))
             if data:
                 self._remove_empty_items(data)
-                # 因为会出现
-                # SSLError: hostname 'c.pcs.baidu.com'
-                # doesn't match u'pcs.baidu.com'
-                # 所以禁用 ssl 证书验证
-                response = requests.post(api, data=data, verify=False,
-                                         **kwargs)
+                response = requests.post(api, data=data, **kwargs)
             else:
                 self._remove_empty_items(files)
-                response = requests.post(api, files=files, verify=False,
-                                         **kwargs)
+                response = requests.post(api, files=files, **kwargs)
         else:
             api = url
-            response = requests.get(api, params=params, verify=False, **kwargs)
+            response = requests.get(api, params=params, **kwargs)
         return response
 
 
