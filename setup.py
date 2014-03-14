@@ -28,7 +28,10 @@ packages = [
 
 
 def long_description():
-    return open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read()
+    try:
+        return open('README.rst', encoding= 'utf-8').read() + '\n\n' + open('CHANGELOG.rst', encoding= 'utf-8').read()
+    except:
+        return open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read()
 
 setup(
     name='baidupcs',
