@@ -15,8 +15,7 @@ logging.basicConfig(level=logging.WARN,
                     format='\n%(funcName)s - %(lineno)d\n%(message)s')
 logger = logging.getLogger(__name__)
 
-access_token = '3.61bf23079c9a472f498d778ee1c40c25.2592000.1383872758'
-access_token += '.570579779-1274287'
+access_token = '23.a4c9142268c190e82bff02905fb79b98.2592000.1397954722.570579779-1274287'
 pcs = PCS(access_token)
 
 
