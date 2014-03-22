@@ -14,7 +14,7 @@ access_token = '23.a4c9142268c190e82bff02905fb79b98.2592000.1397954722.570579779
 pcs = PCS(access_token)
 
 verify = True
-# verify = False  # 因为在我电脑上会出现 SSLError 所以禁用 https 证书验证
+verify = False  # 因为在我电脑上会出现 SSLError 所以禁用 https 证书验证
 
 
 def _file(filename):
