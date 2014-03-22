@@ -1,7 +1,8 @@
 language: python
 python:
-  # - "2.6"
-  # - "2.7"
+  - "2.6"
+  - "2.7"
+  - "pypy"
   - "3.3"
 
 install:
@@ -12,7 +13,7 @@ script:
   - "python -m compileall -f ."
   - "python setup.py test"
   - "python setup.py develop"
-  - "py.test"
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then py.test; fi
 
 notifications:
   email:
