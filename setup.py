@@ -20,9 +20,7 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-requirements = [
-    'requests>=1.1.0',
-]
+requirements = open('requirements.txt').read().split('\n')
 packages = [
     'baidupcs',
 ]
