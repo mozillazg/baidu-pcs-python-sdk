@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
+from codecs import open
 import os
+import sys
 
 __title__ = 'baidupcs'
 __version__ = '0.3.1'
 __author__ = 'mozillazg'
 __license__ = 'MIT'
-__copyright__ = 'Copyright (c) 2013 mozillazg'
+__copyright__ = 'Copyright (c) 2014 mozillazg'
 
 try:
     from setuptools import setup
@@ -28,10 +29,9 @@ packages = [
 
 
 def long_description():
-    try:
-        return open('README.rst', encoding= 'utf-8').read() + '\n\n' + open('CHANGELOG.rst', encoding= 'utf-8').read()
-    except:
-        return open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read()
+    readme = open('README.rst', encoding= 'utf-8').read()
+    changelog = open('CHANGELOG.rst', encoding= 'utf-8').read()
+    return readme + '\n\n' + changelog
 
 setup(
     name='baidupcs',
