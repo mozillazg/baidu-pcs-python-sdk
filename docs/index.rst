@@ -6,22 +6,8 @@
 Welcome to BaiduPCS's documentation!
 ====================================
 
-|Build| |Pypi version| |Pypi downloads|
 
-`百度个人云存储（PCS） <http://developer.baidu.com/ms/pcs>`__ Python SDK
-
-.. |Build| image:: https://api.travis-ci.org/mozillazg/baidu-pcs-python-sdk.png
-   :target: http://travis-ci.org/mozillazg/baidu-pcs-python-sdk
-.. |Pypi version| image:: https://pypip.in/v/baidupcs/badge.png
-   :target: https://crate.io/packages/baidupcs
-.. |Pypi downloads| image:: https://pypip.in/d/baidupcs/badge.png
-   :target: https://crate.io/packages/baidupcs
-
-* Documentation: http://baidupcs.rtfd.org
-* GitHub: https://github.com/mozillazg/baidu-pcs-python-sdk
-* Free software: MIT license
-* PyPI: https://pypi.python.org/pypi/baidupcs
-* Python version: 2.6, 2.7, 3.3
+.. include:: ../README.rst
 
 
 Contents
@@ -30,7 +16,6 @@ Contents
 .. toctree::
     :maxdepth: 4
 
-    quickstart
     api
     changelog
 

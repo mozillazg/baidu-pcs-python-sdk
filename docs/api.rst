@@ -152,3 +152,11 @@ PCS 类
 清空回收站
 ++++++++++
 .. automethod:: baidupcs.PCS.clean_recycle_bin
+
+
+tools
+------
+
+获取新的 Access Token 和 Refresh Token
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: baidupcs.tools.get_new_access_token

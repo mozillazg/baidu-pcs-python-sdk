@@ -2,17 +2,23 @@ language: python
 python:
   - "2.6"
   - "2.7"
+  - "pypy"
   - "3.3"
 
 install:
-  - "pip install -r requirements.txt --use-mirrors"
-  - "pip install -e . --use-mirrors"
+  - "pip install -r requirements_dev.txt"
+  - "pip install -e ."
 
 script:
   - "python -m compileall -f ."
   - "python setup.py test"
   - "python setup.py develop"
-  # - "py.test"
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then py.test --cov baidupcs tests/ && coveralls; fi
+
+after_script:
+  - "coveralls"
 
 notifications:
-  email: false
+  email:
+    on_success: change
+    on_failure: always

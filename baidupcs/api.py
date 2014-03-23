@@ -9,8 +9,9 @@ except ImportError:
     from urllib.parse import urlencode
 
 import requests
+from requests_toolbelt import MultipartEncoder
 
-api_template = 'https://pcs.baidu.com/rest/2.0/pcs/{0}'
+API_TEMPLATE = 'https://pcs.baidu.com/rest/2.0/pcs/{0}'
 
 
 class InvalidToken(Exception):
@@ -31,7 +32,7 @@ def check_token(func):
 
 
 class BaseClass(object):
-    def __init__(self, access_token, api_template=api_template):
+    def __init__(self, access_token, api_template=API_TEMPLATE):
         self.access_token = access_token
         self.api_template = api_template
 
@@ -50,25 +51,25 @@ class BaseClass(object):
         if extra_params:
             params.update(extra_params)
             self._remove_empty_items(params)
+
         if not url:
             url = self.api_template.format(uri)
+        api = url
+
         if data or files:
             api = '%s?%s' % (url, urlencode(params))
             if data:
                 self._remove_empty_items(data)
-                # 因为会出现
-                # SSLError: hostname 'c.pcs.baidu.com'
-                # doesn't match u'pcs.baidu.com'
-                # 所以禁用 ssl 证书验证
-                response = requests.post(api, data=data, verify=False,
-                                         **kwargs)
             else:
                 self._remove_empty_items(files)
-                response = requests.post(api, files=files, verify=False,
-                                         **kwargs)
+                data = MultipartEncoder(files)
+                if kwargs.get('headers'):
+                    kwargs['headers']['Content-Type'] = data.content_type
+                else:
+                    kwargs['headers'] = {'Content-Type': data.content_type}
+            response = requests.post(api, data=data, **kwargs)
         else:
-            api = url
-            response = requests.get(api, params=params, verify=False, **kwargs)
+            response = requests.get(api, params=params, **kwargs)
         return response
 
 
@@ -91,10 +92,6 @@ class PCS(BaseClass):
       >>> response.json()  # 将 json 字符串转换为 python dict
       {u'used': 5138887, u'quota': 6442450944L, u'request_id': 1216061570}
     """
-
-    def __init__(self, access_token, api_template=api_template):
-        super(PCS, self).__init__(access_token, api_template)
-
     def info(self, **kwargs):
         """获取当前用户空间配额信息.
 
@@ -132,7 +129,7 @@ class PCS(BaseClass):
             'path': remote_path,
             'ondup': ondup
         }
-        files = {'file': file_content}
+        files = {'file': ('file', file_content, '')}
         url = 'https://c.pcs.baidu.com/rest/2.0/pcs/file'
         return self._request('file', 'upload', url=url, extra_params=params,
                              files=files, **kwargs)
@@ -160,7 +157,7 @@ class PCS(BaseClass):
         params = {
             'type': 'tmpfile'
         }
-        files = {'file': file_content}
+        files = {'file': ('file', file_content, '')}
         url = 'https://c.pcs.baidu.com/rest/2.0/pcs/file'
         return self._request('file', 'upload', url=url, extra_params=params,
                              files=files, **kwargs)
