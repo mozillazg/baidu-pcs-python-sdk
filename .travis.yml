@@ -6,14 +6,17 @@ python:
   - "3.3"
 
 install:
-  - "pip install -r requirements.txt"
+  - "pip install -r requirements_dev.txt"
   - "pip install -e ."
 
 script:
   - "python -m compileall -f ."
   - "python setup.py test"
   - "python setup.py develop"
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then py.test; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then py.test --cov baidupcs tests/ && coveralls; fi
+
+after_script:
+  - "coveralls"
 
 notifications:
   email:

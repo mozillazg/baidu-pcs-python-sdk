@@ -1,10 +1,10 @@
 BaiduPCS
 ========
 
-|Build| |Pypi version| |Pypi downloads|
+|Build| |Coverage| |Pypi version| |Pypi downloads|
 
 
-`百度个人云存储（PCS） <http://developer.baidu.com/ms/pcs>`__ Python SDK
+`百度个人云存储（PCS） <http://developer.baidu.com/ms/pcs>`__ Python SDK.
 
 * Documentation: http://baidupcs.rtfd.org
 * GitHub: https://github.com/mozillazg/baidu-pcs-python-sdk
@@ -44,8 +44,16 @@ Basic Usage
     {u'used': 5138887, u'quota': 6442450944L, u'request_id': 1216061570}
 
 
+FAQ
+-----
+
+Please visit `Wiki <https://github.com/mozillazg/baidu-pcs-python-sdk/wiki>`__ .
+
+
 .. |Build| image:: https://api.travis-ci.org/mozillazg/baidu-pcs-python-sdk.png?branch=master
    :target: http://travis-ci.org/mozillazg/baidu-pcs-python-sdk
+.. |Coverage| image:: https://coveralls.io/repos/mozillazg/baidu-pcs-python-sdk/badge.png?branch=master
+   :target: https://coveralls.io/r/mozillazg/baidu-pcs-python-sdk
 .. |Pypi version| image:: https://pypip.in/v/baidupcs/badge.png
    :target: https://crate.io/packages/baidupcs
 .. |Pypi downloads| image:: https://pypip.in/d/baidupcs/badge.png

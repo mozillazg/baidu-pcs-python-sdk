@@ -8,3 +8,6 @@ dist/
 baidupcs.egg-info/
 .env/
 build/
+htmlcov/
+.coverage
+

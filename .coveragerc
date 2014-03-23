@@ -1,0 +1,7 @@
+[run]
+omit =
+    
+
+[report]
+exclude_lines =
+    except ImportError

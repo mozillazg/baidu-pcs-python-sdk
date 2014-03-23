@@ -45,6 +45,11 @@ def test_upload():
                           ondup='overwrite', verify=verify)
     assert response.ok and response.json()
 
+    response = pcs.upload('/apps/test_sdk/test.txt', _file('test1'),
+                          ondup='overwrite', verify=verify,
+                          headers={'Accept': '*/*'})
+    assert response.ok and response.json()
+
 
 def test_upload_tmpfile():
     """分片上传 - 上传临时文件"""
