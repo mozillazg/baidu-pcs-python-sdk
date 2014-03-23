@@ -6,7 +6,7 @@ import os
 import sys
 
 __title__ = 'baidupcs'
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 __author__ = 'mozillazg'
 __license__ = 'MIT'
 __copyright__ = 'Copyright (c) 2014 mozillazg'
