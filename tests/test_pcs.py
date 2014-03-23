@@ -7,7 +7,7 @@ import os
 import time
 # from PIL import Image
 
-from baidupcs import PCS
+from baidupcs import PCS, InvalidToken
 from .utils import content_md5, content_crc32, slice_md5
 
 access_token = '23.a4c9142268c190e82bff02905fb79b98.2592000.1397954722.570579779-1274287'
@@ -22,6 +22,15 @@ def _file(filename):
     filepath = os.path.join(current_dir, filename)
     f = open(filepath, 'rb')  # rb 模式
     return f
+
+
+def test_invalidtoken():
+    try:
+        PCS('abc').info()
+    except InvalidToken:
+        assert True
+    else:
+        assert False
 
 
 def test_info():
