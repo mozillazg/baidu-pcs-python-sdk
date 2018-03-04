@@ -54,7 +54,7 @@ Please visit `Wiki <https://github.com/mozillazg/baidu-pcs-python-sdk/wiki>`__ .
    :target: http://travis-ci.org/mozillazg/baidu-pcs-python-sdk
 .. |Coverage| image:: https://coveralls.io/repos/mozillazg/baidu-pcs-python-sdk/badge.png?branch=master
    :target: https://coveralls.io/r/mozillazg/baidu-pcs-python-sdk
-.. |Pypi version| image:: https://pypip.in/v/baidupcs/badge.png
+.. |Pypi version| image:: https://img.shields.io/pypi/v/baidupcs.svg
    :target: https://crate.io/packages/baidupcs
-.. |Pypi downloads| image:: https://pypip.in/d/baidupcs/badge.png
+.. |Pypi downloads| image:: https://img.shields.io/pypi/dm/baidupcs.svg
    :target: https://crate.io/packages/baidupcs
